@@ -32,10 +32,11 @@ class ApiEndpoints {
   static const String featuredStores = '/home/featured';
 
   // ── E-commerce ────────────────────────────────────────────────────────────────
+  static const String ecommerceCategories = '/ecommerce/categories';
   static const String ecommerceProducts = '/ecommerce/products';
-  static String ecommerceProductDetail(int id) => '/ecommerce/products/$id';
+  static String ecommerceProductDetails(int id) => '/ecommerce/products/$id';
   static const String ecommerceOrders = '/ecommerce/orders';
-  static String ecommerceOrderDetail(int id) => '/ecommerce/orders/$id';
+  static String ecommerceOrderDetails(int id) => '/ecommerce/orders/$id';
 
   // ── Grocery ───────────────────────────────────────────────────────────────────
   static const String groceryStores = '/grocery/stores';

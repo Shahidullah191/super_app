@@ -4,8 +4,9 @@ import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/ecommerce/bindings/ecommerce_binding.dart';
+import '../../features/ecommerce/presentation/screens/product_list_screen.dart';
 import '../../features/home/bindings/home_binding.dart';
-import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/main_nav/main_nav_screen.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../shared/address/bindings/address_binding.dart';
@@ -23,10 +24,10 @@ import 'app_routes.dart';
 class AppPages {
   AppPages._();
 
+  static const initial = AppRoutes.splash;
+
   static final routes = [
-    // ── Splash ────────────────────────────────────────────────────────────────
     GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
-    // ── Auth ──────────────────────────────────────────────────────────────────
     GetPage(
       name: AppRoutes.login,
       page: () => const LoginScreen(),
@@ -47,15 +48,17 @@ class AppPages {
       page: () => const ForgotPasswordScreen(),
       binding: AuthBinding(),
     ),
-
-    // ── Main Navigation Shell ─────────────────────────────────────────────────
-    GetPage(name: AppRoutes.mainNav, page: () => const MainNavScreen()),
-
-    // ── Home ──────────────────────────────────────────────────────────────────
     GetPage(
-      name: AppRoutes.home,
-      page: () => const HomeScreen(),
-      binding: HomeBinding(),
+      name: AppRoutes.mainNav,
+      page: () => const MainNavScreen(),
+      bindings: [HomeBinding(), WalletBinding(), ProfileBinding()],
+    ),
+
+    // ── E-commerce ──────────────────────────────────────────────────────────────
+    GetPage(
+      name: AppRoutes.ecommerce,
+      page: () => const ProductListScreen(),
+      binding: EcommerceBinding(),
     ),
 
     // ── Profile ───────────────────────────────────────────────────────────────

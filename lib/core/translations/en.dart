@@ -103,13 +103,29 @@ const Map<String, String> en = {
   'city': 'City',
   'city_hint': 'City',
   'save_address': 'Save Address',
-  'address_added': 'Address added',
-  'address_deleted': 'Address deleted',
+  'address_added': 'Address added successfully',
+  'address_deleted': 'Address deleted successfully',
+
+  // ── E-commerce ──────────────────────────────────────────────────────────────
+  'ecommerce': 'E-commerce',
+  'all_products': 'All Products',
+  'categories': 'Categories',
+  'search_products': 'Search products...',
+  'add_to_cart': 'Add to Cart',
+  'buy_now': 'Buy Now',
+  'out_of_stock': 'Out of Stock',
+  'product_details': 'Product Details',
+  'cart': 'Cart',
+  'checkout': 'Checkout',
+  'ecommerce_order_history': 'Order History', // Renamed to avoid conflict
+  'no_products': 'No products found',
+  'no_products_sub': 'Try searching for something else',
   'no_addresses': 'No addresses saved',
-  'no_addresses_sub': 'Add your home, work, or other addresses.',
   'label_home': 'Home',
   'label_work': 'Work',
   'label_other': 'Other',
+  'home_delivery': 'Home Delivery',
+  'pickup_from_store': 'Pickup from Store',
   'default_label': 'Default',
 
   // ── Wallet ────────────────────────────────────────────────────────────────────

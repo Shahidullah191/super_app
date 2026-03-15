@@ -11,16 +11,15 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
 
   // ── Main Shell ───────────────────────────────────────────────────────────────
-  static const String home = '/home';
-  static const String mainNav = '/main';
+  static const String mainNav = '/main-nav';
 
-  // ── E-commerce ────────────────────────────────────────────────────────────────
-  static const String ecommerceProductList = '/ecommerce/products';
-  static const String ecommerceProductDetail = '/ecommerce/product/:id';
-  static const String ecommerceCart = '/ecommerce/cart';
-  static const String ecommerceCheckout = '/ecommerce/checkout';
+  // ── E-commerce ──────────────────────────────────────────────────────────────
+  static const String ecommerce = '/ecommerce';
+  static const String productDetails = '/product-details';
+  static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String ecommerceOrderHistory = '/ecommerce-orders';
   static const String ecommerceOrderConfirmation = '/ecommerce/order-confirm';
-  static const String ecommerceOrderHistory = '/ecommerce/orders';
 
   // ── Grocery ───────────────────────────────────────────────────────────────────
   static const String groceryStoreList = '/grocery/stores';
