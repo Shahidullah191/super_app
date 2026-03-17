@@ -33,7 +33,7 @@ dependencies:
   # ── Firebase / Notifications ─────────────────────────────────────────────────
   firebase_core: ^4.5.0
   firebase_messaging: ^16.1.2
-  flutter_local_notifications: ^21.0.0
+  #flutter_local_notifications: ^21.0.0
 
   # ── UI Utilities ─────────────────────────────────────────────────────────────
   flutter_svg: ^2.2.4
