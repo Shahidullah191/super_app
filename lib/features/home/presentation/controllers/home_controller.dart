@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
-import '../../../../core/network/api_client.dart';
-import '../../../../core/network/api_endpoints.dart';
+import 'package:get/get.dart';
 
 class BannerModel {
   final int id;
@@ -25,7 +24,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchHome() async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       banners.value = [
@@ -46,14 +45,18 @@ class HomeController extends GetxController {
         ),
       ];
 
-      final res = await ApiClient.get(ApiEndpoints.banners);
-      final list = res['data'] as List? ?? [];
-      if (list.isNotEmpty) {
-        banners.value = list
-            .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-      }
-    } on AppException catch (_) {
+      // Simulate API call
+      await Future.delayed(const Duration(seconds: 1));
+
+      // In a real app, we would fetch from API
+      // final res = await ApiClient.get(ApiEndpoints.banners);
+      // final list = res['data'] as List? ?? [];
+      // if (list.isNotEmpty) {
+      //   banners.value = list
+      //       .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
+      //       .toList();
+      // }
+    } catch (_) {
       // Fail silently on home – show demo data
     } finally {
       isLoading.value = false;

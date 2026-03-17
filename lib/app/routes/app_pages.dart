@@ -2,20 +2,33 @@ import 'package:get/get.dart';
 import 'package:super_app/features/food/presentation/screens/food_cart_screen.dart';
 import 'package:super_app/features/food/presentation/screens/food_checkout_screen.dart';
 import 'package:super_app/features/food/presentation/screens/food_order_tracking_screen.dart';
+import 'package:super_app/features/food/presentation/screens/food_order_confirmation_screen.dart';
 import 'package:super_app/features/grocery/presentation/screens/grocery_product_list_screen.dart';
 import 'package:super_app/features/pharmacy/presentation/screens/prescription_upload_screen.dart';
-import 'package:super_app/shared/orders/presentation/controllers/order_controller.dart';
+import 'package:super_app/shared/orders/bindings/order_binding.dart';
 import 'package:super_app/shared/orders/presentation/screens/order_history_screen.dart';
 import 'package:super_app/shared/settings/presentation/screens/settings_screen.dart';
 import 'package:super_app/shared/help/presentation/screens/help_center_screen.dart';
 import 'package:super_app/shared/wallet/presentation/screens/payment_methods_screen.dart';
 import 'package:super_app/features/grocery/presentation/screens/grocery_checkout_screen.dart';
+import 'package:super_app/features/grocery/presentation/screens/grocery_cart_screen.dart';
+import 'package:super_app/features/grocery/presentation/screens/grocery_product_details_screen.dart';
+import 'package:super_app/features/grocery/presentation/screens/grocery_order_confirmation_screen.dart';
 import 'package:super_app/features/pharmacy/presentation/screens/pharmacy_checkout_screen.dart';
+import 'package:super_app/features/pharmacy/presentation/screens/pharmacy_cart_screen.dart';
+import 'package:super_app/features/pharmacy/presentation/screens/medicine_details_screen.dart';
+import 'package:super_app/features/pharmacy/presentation/screens/pharmacy_order_confirmation_screen.dart';
 import 'package:super_app/shared/chat/presentation/controllers/chat_controller.dart';
 import 'package:super_app/shared/chat/presentation/screens/chat_detail_screen.dart';
 import 'package:super_app/shared/chat/presentation/screens/chat_list_screen.dart';
 import 'package:super_app/shared/orders/presentation/screens/order_confirmation_screen.dart';
 import 'package:super_app/shared/search/presentation/screens/global_search_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/wishlist_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/product_reviews_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/order_details_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/category_list_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/flash_sale_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/track_order_screen.dart';
 import '../../features/auth/bindings/auth_binding.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -118,6 +131,34 @@ class AppPages {
       binding: EcommerceBinding(),
     ),
     GetPage(
+      name: AppRoutes.ecommerceWishlist,
+      page: () => const WishlistScreen(),
+      binding: EcommerceBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceReviews,
+      page: () => const ProductReviewsScreen(),
+      binding: EcommerceBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceOrderDetails,
+      page: () => const OrderDetailsScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceCategories,
+      page: () => const CategoryListScreen(),
+      binding: EcommerceBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceFlashSale,
+      page: () => const FlashSaleScreen(),
+      binding: EcommerceBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceTrackOrder,
+      page: () => const TrackOrderScreen(),
+    ),
+    GetPage(
       name: AppRoutes.groceryStoreList,
       page: () => const GroceryStoreListScreen(),
       binding: GroceryBinding(),
@@ -133,6 +174,20 @@ class AppPages {
       binding: GroceryBinding(),
     ),
     GetPage(
+      name: AppRoutes.groceryCart,
+      page: () => const GroceryCartScreen(),
+      binding: GroceryBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.groceryProductDetails,
+      page: () => const GroceryProductDetailsScreen(),
+      binding: GroceryBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.groceryOrderConfirmation,
+      page: () => const GroceryOrderConfirmationScreen(),
+    ),
+    GetPage(
       name: AppRoutes.pharmacyMedicineList,
       page: () => const PharmacyMedicineListScreen(),
       binding: PharmacyBinding(),
@@ -146,6 +201,20 @@ class AppPages {
       name: AppRoutes.pharmacyCheckout,
       page: () => const PharmacyCheckoutScreen(),
       binding: PharmacyBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pharmacyCart,
+      page: () => const PharmacyCartScreen(),
+      binding: PharmacyBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pharmacyMedicineDetails,
+      page: () => const MedicineDetailsScreen(),
+      binding: PharmacyBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pharmacyOrderConfirmation,
+      page: () => const PharmacyOrderConfirmationScreen(),
     ),
     GetPage(
       name: AppRoutes.foodRestaurantList,
@@ -171,6 +240,10 @@ class AppPages {
       name: AppRoutes.foodOrderTracking,
       page: () => const FoodOrderTrackingScreen(),
       binding: FoodBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.foodOrderConfirmation,
+      page: () => const FoodOrderConfirmationScreen(),
     ),
     GetPage(
       name: AppRoutes.rideBooking,
@@ -230,7 +303,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.orderHistory,
       page: () => const OrderHistoryScreen(),
-      binding: BindingsBuilder(() => Get.put(OrderController())),
+      binding: OrderBinding(),
     ),
     GetPage(name: AppRoutes.settings, page: () => const SettingsScreen()),
     GetPage(name: AppRoutes.helpCenter, page: () => const HelpCenterScreen()),

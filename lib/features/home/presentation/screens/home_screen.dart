@@ -13,26 +13,104 @@ class HomeScreen extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           _buildAppBar(),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSearchBar(),
-                  const SizedBox(height: 20),
-                  _buildBanners(),
-                  const SizedBox(height: 20),
-                  Text('our_services'.tr, style: AppTextStyles.heading2),
-                  const SizedBox(height: 12),
-                  _buildServiceGrid(),
-                  const SizedBox(height: 20),
-                  Text('featured'.tr, style: AppTextStyles.heading2),
-                  const SizedBox(height: 12),
-                  _buildFeaturedList(),
-                ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSearchBar(),
+                      const SizedBox(height: 24),
+                      _buildBanners(),
+                      const SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'our_services'.tr,
+                            style: AppTextStyles.heading2,
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'see_all'.tr,
+                              style: const TextStyle(color: AppColors.primary),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildServiceGrid(),
+                      const SizedBox(height: 32),
+                      Text('featured_offers'.tr, style: AppTextStyles.heading2),
+                      const SizedBox(height: 16),
+                      _buildFeaturedList(),
+                      const SizedBox(height: 100), // Space for floating nav
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'hello_user'.trParams({'name': 'Shahid'}),
+                  style: AppTextStyles.heading2,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on,
+                      color: AppColors.primary,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Gulshan 2, Dhaka',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.textSecondary,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.primary, width: 2),
+            ),
+            child: const CircleAvatar(
+              radius: 22,
+              backgroundImage: NetworkImage(
+                'https://i.pravatar.cc/150?u=shahid',
               ),
             ),
           ),
@@ -43,33 +121,33 @@ class HomeScreen extends GetView<HomeController> {
 
   SliverAppBar _buildAppBar() {
     return SliverAppBar(
-      floating: true,
-      snap: true,
-      backgroundColor: AppColors.white,
+      pinned: true,
+      backgroundColor: AppColors.background,
       elevation: 0,
+      centerTitle: false,
       title: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
-              Icons.grid_view_rounded,
-              color: AppColors.white,
-              size: 20,
+              Icons.bolt_rounded,
+              color: Colors.white,
+              size: 24,
             ),
           ),
-          const SizedBox(width: 10),
-          const Text('Super App', style: AppTextStyles.heading2),
+          const SizedBox(width: 12),
+          const Text('SuperApp', style: AppTextStyles.heading2),
         ],
       ),
       actions: [
         IconButton(
           icon: const Icon(
-            Icons.notifications_outlined,
+            Icons.notifications_none_rounded,
             color: AppColors.textPrimary,
           ),
           onPressed: () => Get.toNamed(AppRoutes.notifications),
@@ -83,17 +161,33 @@ class HomeScreen extends GetView<HomeController> {
     return GestureDetector(
       onTap: controller.onSearchTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            const Icon(Icons.search, color: AppColors.textHint, size: 20),
-            const SizedBox(width: 10),
+            const Icon(
+              Icons.search_rounded,
+              color: AppColors.primary,
+              size: 22,
+            ),
+            const SizedBox(width: 12),
             Text('search_hint'.tr, style: AppTextStyles.hint),
+            const Spacer(),
+            const Icon(
+              Icons.tune_rounded,
+              color: AppColors.textSecondary,
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -102,26 +196,53 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildBanners() {
     return SizedBox(
-      height: 160,
+      height: 180,
       child: Obx(
         () => controller.isLoading.value
-            ? _shimmerBox(height: 160)
+            ? _shimmerBox(height: 180)
             : PageView.builder(
-                controller: PageController(viewportFraction: 0.9),
-                itemCount: controller.banners.isEmpty
-                    ? 1
-                    : controller.banners.length,
+                controller: PageController(viewportFraction: 1.0),
+                itemCount: controller.banners.length,
                 itemBuilder: (_, i) => Container(
-                  margin: const EdgeInsets.only(right: 10),
+                  margin: const EdgeInsets.only(right: 0),
                   decoration: BoxDecoration(
-                    gradient: AppColors.heroGradient,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
+                    image: DecorationImage(
+                      image: NetworkImage(controller.banners[i].imageUrl),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.campaign_rounded,
-                      color: AppColors.white,
-                      size: 60,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomRight,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.6),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Special Offer',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const Text(
+                          'Get 50% OFF on your first order',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -134,82 +255,147 @@ class HomeScreen extends GetView<HomeController> {
     final services = [
       _ServiceItem(
         'ecommerce'.tr,
-        Icons.shopping_bag_outlined,
+        Icons.shopping_bag_rounded,
         AppColors.ecommerce,
         AppRoutes.ecommerce,
       ),
       _ServiceItem(
         'grocery'.tr,
-        Icons.local_grocery_store_outlined,
+        Icons.local_grocery_store_rounded,
         AppColors.grocery,
         AppRoutes.groceryStoreList,
       ),
       _ServiceItem(
         'pharmacy'.tr,
-        Icons.local_pharmacy_outlined,
+        Icons.medical_services_rounded,
         AppColors.pharmacy,
         AppRoutes.pharmacyMedicineList,
       ),
       _ServiceItem(
         'food'.tr,
-        Icons.restaurant_outlined,
+        Icons.fastfood_rounded,
         AppColors.food,
         AppRoutes.foodRestaurantList,
       ),
       _ServiceItem(
         'ride'.tr,
-        Icons.directions_car_outlined,
+        Icons.directions_car_rounded,
         AppColors.ride,
         AppRoutes.rideBooking,
       ),
       _ServiceItem(
         'courier'.tr,
-        Icons.local_shipping_outlined,
+        Icons.local_shipping_rounded,
         AppColors.courier,
         AppRoutes.courierBooking,
       ),
       _ServiceItem(
         'services'.tr,
-        Icons.handyman_outlined,
+        Icons.handyman_rounded,
         AppColors.onDemand,
         AppRoutes.serviceCategory,
       ),
+      _ServiceItem(
+        'more'.tr,
+        Icons.more_horiz_rounded,
+        AppColors.textSecondary,
+        '',
+      ),
     ];
 
-    return GridView.count(
-      crossAxisCount: 4,
+    return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 8,
-      childAspectRatio: 0.78,
-      children: services.map((s) => _ServiceTile(service: s)).toList(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 12,
+        childAspectRatio: 0.85,
+      ),
+      itemCount: services.length,
+      itemBuilder: (_, i) => _ServiceTile(service: services[i]),
     );
   }
 
   Widget _buildFeaturedList() {
     return SizedBox(
-      height: 180,
+      height: 220,
       child: Obx(
         () => controller.isLoading.value
-            ? _shimmerBox(height: 180)
+            ? _shimmerBox(height: 220)
             : ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 itemCount: 5,
                 itemBuilder: (_, i) => Container(
-                  width: 140,
-                  margin: const EdgeInsets.only(right: 12),
+                  width: 280,
+                  margin: const EdgeInsets.only(right: 16),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.border),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.store_outlined,
-                      color: AppColors.textSecondary,
-                      size: 40,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                        child: Image.network(
+                          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop',
+                          height: 130,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Premium Burger House',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.star_rounded,
+                                      color: Colors.amber,
+                                      size: 18,
+                                    ),
+                                    Text(
+                                      '4.8',
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Fast Food • Burgers • 20-30 min',
+                              style: AppTextStyles.caption,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -221,8 +407,8 @@ class HomeScreen extends GetView<HomeController> {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.border,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.border.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
       ),
     );
   }
@@ -243,24 +429,32 @@ class _ServiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(service.route),
+      onTap: () => service.route.isNotEmpty ? Get.toNamed(service.route) : null,
       child: Column(
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
-              color: service.color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(16),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: service.color.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            child: Icon(service.icon, color: service.color, size: 26),
+            child: Icon(service.icon, color: service.color, size: 28),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
             service.label,
             style: AppTextStyles.bodySmall.copyWith(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
+              fontSize: 12,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

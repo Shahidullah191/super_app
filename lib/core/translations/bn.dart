@@ -72,7 +72,9 @@ const Map<String, String> bn = {
   // ── Home ─────────────────────────────────────────────────────────────────────
   'our_services': 'আমাদের সেবাসমূহ',
   'featured': 'বিশেষ',
+  'featured_offers': 'বিশেষ অফার',
   'see_all': 'সব দেখুন',
+  'hello_user': 'হ্যালো, @name',
   'service_ecommerce': 'শপিং',
   'service_grocery': 'মুদিখানা',
   'service_pharmacy': 'ফার্মেসি',
@@ -173,6 +175,9 @@ const Map<String, String> bn = {
   'product_details': 'পণ্যের বিবরণ',
   'cart': 'কার্ট',
   'order_placed': 'অর্ডার সফলভাবে সম্পন্ন হয়েছে!',
+  'food_order_placed': 'অর্ডার সফলভাবে সম্পন্ন হয়েছে!',
+  'food_order_placed_sub':
+      'আপনার সুস্বাদু খাবার তৈরি করা হচ্ছে এবং শীঘ্রই পৌঁছে দেওয়া হবে।',
   'ecommerce_order_history': 'অর্ডার ইতিহাস',
   'no_products': 'কোন পণ্য পাওয়া যায়নি',
   'no_products_sub': 'অন্য কিছু খুঁজে দেখুন',

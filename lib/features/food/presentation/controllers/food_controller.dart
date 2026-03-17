@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import '../../data/models/restaurant_model.dart';
+import '../../../../app/routes/app_routes.dart';
 
 class FoodController extends GetxController {
   final isLoading = false.obs;
   final restaurants = <RestaurantModel>[].obs;
   final selectedRestaurant = Rxn<RestaurantModel>();
+  final cartItems = <MenuItemModel, int>{}.obs;
 
   @override
   void onInit() {
@@ -13,7 +15,7 @@ class FoodController extends GetxController {
   }
 
   Future<void> fetchRestaurants() async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       restaurants.value = [
@@ -106,25 +108,36 @@ class FoodController extends GetxController {
     return [];
   }
 
-  final cartItems = <MenuItemModel>[].obs;
-
   void addToCart(MenuItemModel item) {
-    cartItems.add(item);
-    Get.snackbar('Success', '${item.name} added to cart');
+    if (cartItems.containsKey(item)) {
+      cartItems[item] = cartItems[item]! + 1;
+    } else {
+      cartItems[item] = 1;
+    }
   }
 
   void removeFromCart(MenuItemModel item) {
-    cartItems.remove(item);
+    if (cartItems.containsKey(item)) {
+      if (cartItems[item] == 1) {
+        cartItems.remove(item);
+      } else {
+        cartItems[item] = cartItems[item]! - 1;
+      }
+    }
   }
 
   void clearCart() {
     cartItems.clear();
   }
 
-  double get subtotal => cartItems.fold(0, (sum, item) => sum + item.price);
+  double get subtotal => cartItems.entries
+      .map((e) => e.key.price * e.value)
+      .fold(0, (a, b) => a + b);
+
+  int get totalItems => cartItems.values.fold(0, (a, b) => a + b);
 
   Future<void> getRestaurantDetails(int id) async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       selectedRestaurant.value = restaurants.firstWhereOrNull(
         (r) => r.id == id,
@@ -132,5 +145,10 @@ class FoodController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void placeOrder() {
+    clearCart();
+    Get.offNamed(AppRoutes.foodOrderTracking.replaceAll(':id', '123'));
   }
 }

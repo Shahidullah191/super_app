@@ -18,7 +18,7 @@ class PharmacyController extends GetxController {
   }
 
   Future<void> fetchMedicines() async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       medicines.value = [

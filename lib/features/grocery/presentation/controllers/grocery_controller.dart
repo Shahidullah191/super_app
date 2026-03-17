@@ -57,7 +57,7 @@ class GroceryController extends GetxController {
   }
 
   Future<void> fetchProducts(int storeId) async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       products.value = [

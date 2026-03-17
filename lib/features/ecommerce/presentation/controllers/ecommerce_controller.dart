@@ -10,6 +10,8 @@ class EcommerceController extends GetxController {
   final products = <ProductModel>[].obs;
   final isLoading = false.obs;
   final isCategoriesLoading = false.obs;
+  final wishlist = <ProductModel>[].obs;
+  final reviews = <ReviewModel>[].obs;
 
   final selectedCategoryId = Rxn<int>();
   final searchQuery = ''.obs;
@@ -46,7 +48,7 @@ class EcommerceController extends GetxController {
     if (refresh) {
       products.clear();
     }
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       final demoProducts = [
@@ -136,7 +138,7 @@ class EcommerceController extends GetxController {
   }
 
   Future<ProductModel?> getProductDetails(int id) async {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     try {
       // ── Demo Data ──────────────────────────────────────────────────────────
       final demoProducts = [
@@ -186,4 +188,56 @@ class EcommerceController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // ── Wishlist ───────────────────────────────────────────────────────────────
+  void toggleWishlist(ProductModel product) {
+    if (isInWishlist(product.id)) {
+      wishlist.removeWhere((p) => p.id == product.id);
+      Get.snackbar('Wishlist', 'Removed from wishlist');
+    } else {
+      wishlist.add(product);
+      Get.snackbar('Wishlist', 'Added to wishlist');
+    }
+  }
+
+  bool isInWishlist(int productId) {
+    return wishlist.any((p) => p.id == productId);
+  }
+
+  // ── Reviews ────────────────────────────────────────────────────────────────
+  void fetchReviews(int productId) {
+    reviews.value = [
+      ReviewModel(
+        id: 1,
+        userName: 'John Doe',
+        rating: 5,
+        comment: 'Excellent sound quality and very comfortable!',
+        date: '2 days ago',
+      ),
+      ReviewModel(
+        id: 2,
+        userName: 'Jane Smith',
+        rating: 4,
+        comment:
+            'Good battery life, but the noise cancellation could be better.',
+        date: '1 week ago',
+      ),
+    ];
+  }
+}
+
+class ReviewModel {
+  final int id;
+  final String userName;
+  final double rating;
+  final String comment;
+  final String date;
+
+  ReviewModel({
+    required this.id,
+    required this.userName,
+    required this.rating,
+    required this.comment,
+    required this.date,
+  });
 }

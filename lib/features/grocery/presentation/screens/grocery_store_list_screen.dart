@@ -41,7 +41,10 @@ class _StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed('/grocery/products', arguments: store.id),
+      onTap: () => Get.toNamed(
+        '/grocery/products',
+        arguments: {'id': store.id, 'name': store.name},
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

@@ -20,17 +20,26 @@ class AppRoutes {
   static const String checkout = '/checkout';
   static const String ecommerceOrderHistory = '/ecommerce-orders';
   static const String ecommerceOrderConfirmation = '/ecommerce/order-confirm';
+  static const String ecommerceWishlist = '/ecommerce/wishlist';
+  static const String ecommerceReviews = '/ecommerce/reviews';
+  static const String ecommerceOrderDetails = '/ecommerce/order-details';
+  static const String ecommerceCategories = '/ecommerce/categories';
+  static const String ecommerceFlashSale = '/ecommerce/flash-sale';
+  static const String ecommerceTrackOrder = '/ecommerce/track-order';
 
   // ── Grocery ───────────────────────────────────────────────────────────────────
   static const String groceryStoreList = '/grocery/stores';
   static const String groceryProductList = '/grocery/products';
   static const String groceryCart = '/grocery/cart';
   static const String groceryCheckout = '/grocery/checkout';
+  static const String groceryProductDetails = '/grocery/product-details';
   static const String groceryOrderConfirmation = '/grocery/order-confirm';
 
   // ── Pharmacy ──────────────────────────────────────────────────────────────────
   static const String pharmacyMedicineList = '/pharmacy/medicines';
+  static const String pharmacyMedicineDetails = '/pharmacy/medicine-details';
   static const String pharmacyUploadPrescription = '/pharmacy/prescription';
+  static const String pharmacyCart = '/pharmacy/cart';
   static const String pharmacyCheckout = '/pharmacy/checkout';
   static const String pharmacyOrderConfirmation = '/pharmacy/order-confirm';
 
@@ -39,6 +48,7 @@ class AppRoutes {
   static const String foodMenu = '/food/menu/:id';
   static const String foodCart = '/food/cart';
   static const String foodCheckout = '/food/checkout';
+  static const String foodOrderConfirmation = '/food/order-confirm';
   static const String foodOrderTracking = '/food/tracking/:id';
 
   // ── Ride ─────────────────────────────────────────────────────────────────────

@@ -73,7 +73,9 @@ const Map<String, String> en = {
   // ── Home ─────────────────────────────────────────────────────────────────────
   'our_services': 'Our Services',
   'featured': 'Featured',
+  'featured_offers': 'Featured Offers',
   'see_all': 'See All',
+  'hello_user': 'Hello, @name',
   'service_ecommerce': 'Shop',
   'service_grocery': 'Grocery',
   'service_pharmacy': 'Pharmacy',
@@ -132,6 +134,9 @@ const Map<String, String> en = {
   'order_summary': 'Order Summary',
   'place_order': 'Place Order',
   'order_placed': 'Order placed successfully!',
+  'food_order_placed': 'Order Placed Successfully!',
+  'food_order_placed_sub':
+      'Your delicious meal is being prepared and will be delivered soon.',
   'change': 'Change',
   'start_shopping': 'Start Shopping',
   'payment_method': 'Payment Method',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -84,9 +85,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           icon: const Icon(Icons.share_outlined, color: AppColors.textPrimary),
           onPressed: () {},
         ),
-        IconButton(
-          icon: const Icon(Icons.favorite_border, color: AppColors.textPrimary),
-          onPressed: () {},
+        Obx(
+          () => IconButton(
+            icon: Icon(
+              controller.isInWishlist(product!.id)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: controller.isInWishlist(product!.id)
+                  ? Colors.red
+                  : AppColors.textPrimary,
+            ),
+            onPressed: () => controller.toggleWishlist(product!),
+          ),
         ),
       ],
     );
@@ -215,10 +225,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            '${product!.reviewCount} reviews',
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
+          GestureDetector(
+            onTap: () =>
+                Get.toNamed(AppRoutes.ecommerceReviews, arguments: product!.id),
+            child: Text(
+              '${product!.reviewCount} reviews',
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.primary,
+                decoration: TextDecoration.underline,
+              ),
             ),
           ),
         ],

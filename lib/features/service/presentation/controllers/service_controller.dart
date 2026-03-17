@@ -43,7 +43,7 @@ class ServiceController extends GetxController {
   }
 
   void fetchProviders(int categoryId) {
-    isLoading.value = true;
+    Future.microtask(() => isLoading.value = true);
     providers.value = [
       ServiceProviderModel(
         id: 1,

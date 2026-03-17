@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -36,7 +37,7 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
               onPressed: () {
                 controller.clearCart();
                 Get.offNamed(
-                  '/order-confirmation',
+                  AppRoutes.pharmacyOrderConfirmation,
                   arguments: {
                     'title': 'Order Placed Successfully!',
                     'subTitle':

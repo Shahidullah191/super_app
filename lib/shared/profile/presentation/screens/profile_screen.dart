@@ -56,6 +56,11 @@ class ProfileScreen extends GetView<ProfileController> {
                 onTap: () => Get.toNamed(AppRoutes.editProfile),
               ),
               _ProfileMenuItem(
+                icon: Icons.favorite_outline,
+                label: 'wishlist'.tr,
+                onTap: () => Get.toNamed(AppRoutes.ecommerceWishlist),
+              ),
+              _ProfileMenuItem(
                 icon: Icons.location_on_outlined,
                 label: 'Saved Addresses',
                 onTap: () => Get.toNamed(AppRoutes.addressBook),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/state_widgets.dart';
@@ -25,7 +26,13 @@ class OrderHistoryScreen extends GetView<OrderController> {
         return ListView.builder(
           padding: const EdgeInsets.all(16),
           itemCount: controller.orders.length,
-          itemBuilder: (_, i) => _OrderCard(order: controller.orders[i]),
+          itemBuilder: (_, i) => GestureDetector(
+            onTap: () => Get.toNamed(
+              AppRoutes.ecommerceOrderDetails,
+              arguments: controller.orders[i],
+            ),
+            child: _OrderCard(order: controller.orders[i]),
+          ),
         );
       }),
     );

@@ -4,6 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/food_controller.dart';
+import '../../data/models/restaurant_model.dart';
+import '../../../../app/routes/app_routes.dart';
 
 class RestaurantMenuScreen extends StatefulWidget {
   const RestaurantMenuScreen({super.key});
@@ -31,48 +33,75 @@ class _RestaurantMenuScreenState extends State<RestaurantMenuScreen> {
       body: Obx(() {
         if (controller.isLoading.value) return const LoadingWidget();
         final restaurant = controller.selectedRestaurant.value;
-        if (restaurant == null)
+        if (restaurant == null) {
           return const Center(child: Text('Restaurant not found'));
+        }
 
-        return CustomScrollView(
-          slivers: [
-            _buildAppBar(restaurant),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('menu'.tr, style: AppTextStyles.heading2),
-                    const SizedBox(height: 16),
-                  ],
+        return Stack(
+          children: [
+            CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                _buildAppBar(restaurant),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('menu'.tr, style: AppTextStyles.heading2),
+                        const Icon(
+                          Icons.search_rounded,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) =>
+                        _MenuItemTile(item: restaurant.menu[index]),
+                    childCount: restaurant.menu.length,
+                  ),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 120)),
+              ],
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => _MenuItemTile(item: restaurant.menu[index]),
-                childCount: restaurant.menu.length,
-              ),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            _buildCartSummary(),
           ],
         );
       }),
-      bottomSheet: _buildCartSummary(),
     );
   }
 
-  Widget _buildAppBar(dynamic restaurant) {
+  Widget _buildAppBar(RestaurantModel restaurant) {
     return SliverAppBar(
-      expandedHeight: 200,
+      expandedHeight: 240,
       pinned: true,
+      elevation: 0,
+      backgroundColor: AppColors.primary,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+        onPressed: () => Get.back(),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.favorite_border_rounded, color: Colors.white),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.share_rounded, color: Colors.white),
+          onPressed: () {},
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           restaurant.name,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ),
         background: Stack(
@@ -81,89 +110,110 @@ class _RestaurantMenuScreenState extends State<RestaurantMenuScreen> {
             Image.network(restaurant.image, fit: BoxFit.cover),
             Container(
               decoration: BoxDecoration(
-                gradient: Colors.black
-                    .withValues(alpha: 0.4)
-                    .linearGradient(
-                      Alignment.topCenter,
-                      Alignment.bottomCenter,
-                    ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.3),
+                    Colors.black.withValues(alpha: 0.7),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Get.back(),
-      ),
     );
   }
 
   Widget _buildCartSummary() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '2 Items | ৳770',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'plus_delivery_charge'.tr,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
+    return Obx(() {
+      if (controller.cartItems.isEmpty) return const SizedBox.shrink();
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
-          TextButton(
-            onPressed: () => Get.toNamed('/food/cart'),
-            child: Row(
-              children: [
-                Text(
-                  'view_cart'.tr,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${controller.totalItems} Items | ৳${controller.subtotal}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
+                  Text(
+                    'plus_delivery_charge'.tr,
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: () => Get.toNamed(AppRoutes.foodCart),
+                child: Row(
+                  children: [
+                    Text(
+                      'view_cart'.tr,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.shopping_bag_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ],
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
 
-class _MenuItemTile extends StatelessWidget {
-  final dynamic item;
+class _MenuItemTile extends GetView<FoodController> {
+  final MenuItemModel item;
   const _MenuItemTile({required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -173,11 +223,11 @@ class _MenuItemTile extends StatelessWidget {
               children: [
                 Text(
                   item.name,
-                  style: AppTextStyles.bodyMedium.copyWith(
+                  style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   item.description,
                   style: AppTextStyles.caption.copyWith(
@@ -186,10 +236,10 @@ class _MenuItemTile extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
                   '৳${item.price.toStringAsFixed(0)}',
-                  style: AppTextStyles.bodyMedium.copyWith(
+                  style: AppTextStyles.bodyLarge.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
                   ),
@@ -197,44 +247,84 @@ class _MenuItemTile extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           Stack(
             alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 child: Image.network(
                   item.image,
-                  width: 80,
-                  height: 80,
+                  width: 90,
+                  height: 90,
                   fit: BoxFit.cover,
                 ),
               ),
               Positioned(
-                bottom: -10,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.snackbar('success'.tr, 'added_to_cart'.tr);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.white,
-                    foregroundColor: AppColors.primary,
-                    elevation: 2,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 0,
+                bottom: -15,
+                child: Obx(() {
+                  final quantity = controller.cartItems[item] ?? 0;
+                  if (quantity > 0) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          _buildQtyBtn(
+                            Icons.remove,
+                            () => controller.removeFromCart(item),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              '$quantity',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          _buildQtyBtn(
+                            Icons.add,
+                            () => controller.addToCart(item),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return ElevatedButton(
+                    onPressed: () => controller.addToCart(item),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppColors.primary,
+                      elevation: 4,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      minimumSize: const Size(70, 32),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(
+                          color: AppColors.primary,
+                          width: 1.5,
+                        ),
+                      ),
                     ),
-                    minimumSize: const Size(60, 30),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: const BorderSide(color: AppColors.primary),
+                    child: const Text(
+                      'ADD',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'ADD',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                  );
+                }),
               ),
             ],
           ),
@@ -242,9 +332,14 @@ class _MenuItemTile extends StatelessWidget {
       ),
     );
   }
-}
 
-extension on Color {
-  Gradient linearGradient(Alignment begin, Alignment end) =>
-      LinearGradient(begin: begin, end: end, colors: [this, this]);
+  Widget _buildQtyBtn(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        child: Icon(icon, size: 18, color: AppColors.primary),
+      ),
+    );
+  }
 }

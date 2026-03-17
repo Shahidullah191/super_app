@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -30,13 +31,7 @@ class GroceryCheckoutScreen extends GetView<GroceryController> {
               label: 'place_order'.tr,
               onPressed: () {
                 controller.clearCart();
-                Get.offNamed(
-                  '/order-confirmation',
-                  arguments: {
-                    'title': 'Order Placed Successfully!',
-                    'subTitle': 'Your grocery items will be delivered soon.',
-                  },
-                );
+                Get.offNamed(AppRoutes.groceryOrderConfirmation);
               },
             ),
           ],

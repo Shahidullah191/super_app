@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/state_widgets.dart';
@@ -26,18 +27,36 @@ class ProductListScreen extends GetView<EcommerceController> {
           // ── Search Bar ──────────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.all(16),
-            child: TextField(
-              onChanged: controller.searchProducts,
-              decoration: InputDecoration(
-                hintText: 'search_products'.tr,
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: AppColors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: controller.searchProducts,
+                    decoration: InputDecoration(
+                      hintText: 'search_products'.tr,
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      fillColor: AppColors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () => Get.toNamed(AppRoutes.ecommerceFlashSale),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.flash_on, color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -69,6 +88,20 @@ class ProductListScreen extends GetView<EcommerceController> {
                 },
               );
             }),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('categories'.tr, style: AppTextStyles.heading3),
+                TextButton(
+                  onPressed: () => Get.toNamed(AppRoutes.ecommerceCategories),
+                  child: Text('view_all'.tr),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 16),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -11,67 +12,64 @@ class PrescriptionUploadScreen extends GetView<PharmacyController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('upload_prescription'.tr)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Upload your prescription', style: AppTextStyles.heading2),
+            Text('upload_prescription_title'.tr, style: AppTextStyles.heading2),
             const SizedBox(height: 8),
             Text(
-              'Our pharmacist will review it and add the required medicines to your cart.',
+              'upload_prescription_desc'.tr,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
             const SizedBox(height: 32),
-            Obx(
-              () => GestureDetector(
-                onTap: () {
-                  // Simulate image picker
-                  controller.uploadPrescription(
-                    'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop',
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: AppColors.primary,
-                      style: BorderStyle.solid,
-                      width: 1,
+            Center(
+              child: GestureDetector(
+                onTap: () => controller.uploadPrescription('path/to/image'),
+                child: Obx(
+                  () => Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        style: BorderStyle.solid,
+                      ),
                     ),
-                  ),
-                  child: controller.prescriptionImage.value != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            controller.prescriptionImage.value!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.cloud_upload_outlined,
-                              size: 48,
-                              color: AppColors.primary,
+                    child: controller.prescriptionImage.value != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                              'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop',
+                              fit: BoxFit.cover,
                             ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Tap to upload',
-                              style: AppTextStyles.bodyMedium.copyWith(
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.cloud_upload_outlined,
+                                size: 48,
                                 color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'tap_to_upload'.tr,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -79,20 +77,14 @@ class PrescriptionUploadScreen extends GetView<PharmacyController> {
             _buildGuidelines(),
             const SizedBox(height: 40),
             CustomButton(
-              label: 'Submit Prescription',
+              label: 'continue'.tr,
               onPressed: () {
                 if (controller.prescriptionImage.value != null) {
-                  Get.snackbar(
-                    'Success',
-                    'Prescription uploaded successfully',
-                    backgroundColor: AppColors.success,
-                    colorText: Colors.white,
-                  );
-                  Get.back();
+                  Get.toNamed(AppRoutes.pharmacyCart);
                 } else {
                   Get.snackbar(
-                    'Error',
-                    'Please upload a prescription first',
+                    'error'.tr,
+                    'please_upload_prescription'.tr,
                     backgroundColor: AppColors.error,
                     colorText: Colors.white,
                   );
