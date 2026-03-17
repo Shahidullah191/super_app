@@ -21,8 +21,8 @@ class WalletController extends GetxController {
   Future<void> fetchWallet() async {
     isLoading.value = true;
     try {
-      wallet.value = await _repo.getWallet();
-    } on AppException catch (_) {
+      // ── Demo Data ──────────────────────────────────────────────────────────
+      wallet.value = WalletModel(balance: 2500.50, currency: '৳');
     } finally {
       isLoading.value = false;
     }
@@ -31,8 +31,30 @@ class WalletController extends GetxController {
   Future<void> fetchTransactions() async {
     isLoadingTx.value = true;
     try {
-      transactions.value = await _repo.getTransactions();
-    } on AppException catch (_) {
+      // ── Demo Data ──────────────────────────────────────────────────────────
+      transactions.value = [
+        TransactionModel(
+          id: 101,
+          type: 'credit',
+          amount: 500,
+          description: 'Added from bKash',
+          createdAt: DateTime.now().subtract(const Duration(days: 1)),
+        ),
+        TransactionModel(
+          id: 102,
+          type: 'debit',
+          amount: 150,
+          description: 'Food Order #12345',
+          createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        ),
+        TransactionModel(
+          id: 103,
+          type: 'credit',
+          amount: 1000,
+          description: 'Added from Nagad',
+          createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        ),
+      ];
     } finally {
       isLoadingTx.value = false;
     }

@@ -34,8 +34,8 @@ class TransactionHistoryScreen extends GetView<WalletController> {
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: tx.isCredit
-                        ? AppColors.success.withOpacity(0.12)
-                        : AppColors.error.withOpacity(0.12),
+                        ? AppColors.success.withValues(alpha: 0.12)
+                        : AppColors.error.withValues(alpha: 0.12),
                     child: Icon(
                       tx.isCredit ? Icons.arrow_downward : Icons.arrow_upward,
                       color: tx.isCredit ? AppColors.success : AppColors.error,

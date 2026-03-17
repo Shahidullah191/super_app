@@ -27,13 +27,34 @@ class HomeController extends GetxController {
   Future<void> fetchHome() async {
     isLoading.value = true;
     try {
+      // ── Demo Data ──────────────────────────────────────────────────────────
+      banners.value = [
+        BannerModel(
+          id: 1,
+          imageUrl:
+              'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
+        ),
+        BannerModel(
+          id: 2,
+          imageUrl:
+              'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=2070&auto=format&fit=crop',
+        ),
+        BannerModel(
+          id: 3,
+          imageUrl:
+              'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=2094&auto=format&fit=crop',
+        ),
+      ];
+
       final res = await ApiClient.get(ApiEndpoints.banners);
       final list = res['data'] as List? ?? [];
-      banners.value = list
-          .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      if (list.isNotEmpty) {
+        banners.value = list
+            .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
     } on AppException catch (_) {
-      // Fail silently on home – show empty state
+      // Fail silently on home – show demo data
     } finally {
       isLoading.value = false;
     }

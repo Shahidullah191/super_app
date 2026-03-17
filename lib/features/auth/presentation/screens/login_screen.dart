@@ -101,12 +101,15 @@ class LoginScreen extends GetView<AuthController> {
                     label: 'Login',
                     isLoading: controller.isLoading.value,
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
+                      
+                      Get.toNamed(AppRoutes.mainNav);
+
+                      /*if (formKey.currentState!.validate()) {
                         controller.login(
                           phone: phoneCtrl.text.trim(),
                           password: passCtrl.text.trim(),
                         );
-                      }
+                      }*/
                     },
                   ),
                 ),

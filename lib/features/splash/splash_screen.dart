@@ -65,10 +65,10 @@ class _SplashScreenState extends State<SplashScreen>
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.15),
+                      color: AppColors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(28),
                       border: Border.all(
-                        color: AppColors.white.withOpacity(0.3),
+                        color: AppColors.white.withValues(alpha: 0.3),
                         width: 1.5,
                       ),
                     ),
@@ -90,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
                   Text(
                     'Everything in one place',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.white.withOpacity(0.8),
+                      color: AppColors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],

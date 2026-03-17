@@ -98,13 +98,16 @@ class RegisterScreen extends GetView<AuthController> {
                     label: 'Create Account',
                     isLoading: controller.isLoading.value,
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
+
+                      Get.toNamed(AppRoutes.mainNav);
+
+                      /*if (formKey.currentState!.validate()) {
                         controller.register(
                           name: nameCtrl.text.trim(),
                           phone: phoneCtrl.text.trim(),
                           password: passCtrl.text.trim(),
                         );
-                      }
+                      }*/
                     },
                   ),
                 ),

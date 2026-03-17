@@ -43,7 +43,7 @@ class SuperApp extends StatelessWidget {
       supportedLocales: const [Locale('en', 'US'), Locale('bn', 'BD')],
 
       // ── Routing ────────────────────────────────────────────────────────────
-      initialRoute: StorageService.isLoggedIn ? AppRoutes.mainNav : AppRoutes.login,
+      initialRoute: AppRoutes.splash,
       getPages: AppPages.routes,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),

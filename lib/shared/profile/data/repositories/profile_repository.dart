@@ -46,9 +46,15 @@ class ProfileController extends GetxController {
   Future<void> fetchProfile() async {
     isLoading.value = true;
     try {
-      profile.value = await _repo.getProfile();
-    } on AppException catch (e) {
-      Get.snackbar('error'.tr, e.message);
+      // ── Demo Data ──────────────────────────────────────────────────────────
+      profile.value = ProfileModel(
+        id: 1,
+        name: 'Shahidullah',
+        phone: '01700000000',
+        email: 'shahid@example.com',
+        avatar:
+            'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop',
+      );
     } finally {
       isLoading.value = false;
     }
