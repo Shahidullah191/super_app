@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -13,12 +14,24 @@ class RideTrackingScreen extends GetView<RideController> {
     return Scaffold(
       body: Stack(
         children: [
-          // Mock Map
-          Container(
-            color: Colors.grey[200],
-            child: const Center(
-              child: Icon(Icons.map, size: 100, color: Colors.grey),
+          GoogleMap(
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(23.7940, 90.4125), // Gulshan 2, Dhaka
+              zoom: 15,
             ),
+            markers: {
+              const Marker(
+                markerId: MarkerId('pickup'),
+                position: LatLng(23.7940, 90.4125),
+                infoWindow: InfoWindow(title: 'Pickup Location'),
+              ),
+              const Marker(
+                markerId: MarkerId('driver'),
+                position: LatLng(23.7950, 90.4140),
+                infoWindow: InfoWindow(title: 'Driver Location'),
+              ),
+            },
+            onMapCreated: (controller) {},
           ),
           _buildTopBar(),
           _buildDriverPanel(),

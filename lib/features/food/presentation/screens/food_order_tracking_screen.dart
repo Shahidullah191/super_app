@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../controllers/food_controller.dart';
@@ -12,12 +13,19 @@ class FoodOrderTrackingScreen extends GetView<FoodController> {
     return Scaffold(
       body: Stack(
         children: [
-          // Mock Map
-          Container(
-            color: Colors.grey[200],
-            child: const Center(
-              child: Icon(Icons.map, size: 100, color: Colors.grey),
+          GoogleMap(
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(23.7940, 90.4125), // Gulshan 2, Dhaka
+              zoom: 15,
             ),
+            markers: {
+              const Marker(
+                markerId: MarkerId('rider'),
+                position: LatLng(23.7945, 90.4130),
+                infoWindow: InfoWindow(title: 'Kamrul Hasan'),
+              ),
+            },
+            onMapCreated: (controller) {},
           ),
           _buildTopBar(),
           _buildStatusPanel(),
