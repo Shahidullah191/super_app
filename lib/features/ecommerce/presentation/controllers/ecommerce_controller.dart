@@ -101,11 +101,13 @@ class EcommerceController extends GetxController {
 
       products.value = demoProducts.where((p) {
         if (selectedCategoryId.value != null &&
-            p.categoryId != selectedCategoryId.value)
+            p.categoryId != selectedCategoryId.value) {
           return false;
+        }
         if (searchQuery.value.isNotEmpty &&
-            !p.name.toLowerCase().contains(searchQuery.value.toLowerCase()))
+            !p.name.toLowerCase().contains(searchQuery.value.toLowerCase())) {
           return false;
+        }
         return true;
       }).toList();
 

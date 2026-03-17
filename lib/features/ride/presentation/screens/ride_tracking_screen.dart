@@ -14,24 +14,30 @@ class RideTrackingScreen extends GetView<RideController> {
     return Scaffold(
       body: Stack(
         children: [
-          GoogleMap(
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(23.7940, 90.4125), // Gulshan 2, Dhaka
-              zoom: 15,
+          Obx(
+            () => GoogleMap(
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(23.7940, 90.4125), // Gulshan 2, Dhaka
+                zoom: 15,
+              ),
+              markers: {
+                const Marker(
+                  markerId: MarkerId('pickup'),
+                  position: LatLng(23.7940, 90.4125),
+                  infoWindow: InfoWindow(title: 'Pickup Location'),
+                ),
+                if (controller.driverPosition.value != null)
+                  Marker(
+                    markerId: const MarkerId('driver'),
+                    position: controller.driverPosition.value!,
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure,
+                    ),
+                    infoWindow: const InfoWindow(title: 'Driver Location'),
+                  ),
+              },
+              onMapCreated: (controller) {},
             ),
-            markers: {
-              const Marker(
-                markerId: MarkerId('pickup'),
-                position: LatLng(23.7940, 90.4125),
-                infoWindow: InfoWindow(title: 'Pickup Location'),
-              ),
-              const Marker(
-                markerId: MarkerId('driver'),
-                position: LatLng(23.7950, 90.4140),
-                infoWindow: InfoWindow(title: 'Driver Location'),
-              ),
-            },
-            onMapCreated: (controller) {},
           ),
           _buildTopBar(),
           _buildDriverPanel(),
@@ -78,7 +84,9 @@ class RideTrackingScreen extends GetView<RideController> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Arriving in 3 min',
+                    controller.status.value == RideStatus.arriving
+                        ? 'Arriving in 3 min'
+                        : 'Ride Started',
                     style: AppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

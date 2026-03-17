@@ -30,7 +30,7 @@ class _ForgotPhoneView extends GetView<AuthController> {
   final _formKey = GlobalKey<FormState>();
   final _phoneCtrl = TextEditingController();
 
-  _ForgotPhoneView({super.key});
+  _ForgotPhoneView();
 
   @override
   Widget build(BuildContext context) {

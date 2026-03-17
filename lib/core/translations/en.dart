@@ -150,7 +150,7 @@ const Map<String, String> en = {
   'pharmacy_medicines': 'Pharmacy Medicines',
   'no_medicines': 'No medicines found',
   'no_medicines_sub': 'Try searching for a different medicine',
-  'prescription_upload_coming_soon': 'Prescription upload coming soon!',
+  'upload_prescription': 'Upload Prescription',
   'restaurants': 'Restaurants',
   'no_restaurants': 'No restaurants found',
   'no_restaurants_sub': 'Try searching in a different area',
@@ -215,4 +215,13 @@ const Map<String, String> en = {
   'status_out_for_delivery': 'Out for Delivery',
   'status_completed': 'Completed',
   'status_cancelled': 'Cancelled',
+
+  // ── Settings & Help ──────────────────────────────────────────────────────────
+  'settings': 'Settings',
+  'help_center': 'Help Center',
+  'payment_methods': 'Payment Methods',
+  'no_orders': 'No orders found',
+  'no_addresses_sub': 'Add an address to see it here',
+  'track_order': 'Track Order',
+  'chat': 'Chat',
 };

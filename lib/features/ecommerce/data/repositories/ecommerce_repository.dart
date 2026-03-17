@@ -19,8 +19,8 @@ class EcommerceRepository {
     final res = await ApiClient.get(
       ApiEndpoints.ecommerceProducts,
       queryParameters: {
-        if (categoryId != null) 'category_id': categoryId,
-        if (search != null) 'search': search,
+        'category_id': ?categoryId,
+        'search': ?search,
         'page': page,
       },
     );

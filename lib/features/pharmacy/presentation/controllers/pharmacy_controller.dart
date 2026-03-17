@@ -4,6 +4,12 @@ import '../../data/models/medicine_model.dart';
 class PharmacyController extends GetxController {
   final isLoading = false.obs;
   final medicines = <MedicineModel>[].obs;
+  final cartItems = <MedicineModel, int>{}.obs;
+  final prescriptionImage = Rxn<String>();
+
+  double get subtotal => cartItems.entries
+      .map((e) => e.key.price * e.value)
+      .fold(0, (a, b) => a + b);
 
   @override
   void onInit() {
@@ -53,5 +59,32 @@ class PharmacyController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void addToCart(MedicineModel medicine) {
+    if (cartItems.containsKey(medicine)) {
+      cartItems[medicine] = cartItems[medicine]! + 1;
+    } else {
+      cartItems[medicine] = 1;
+    }
+  }
+
+  void removeFromCart(MedicineModel medicine) {
+    if (cartItems.containsKey(medicine)) {
+      if (cartItems[medicine] == 1) {
+        cartItems.remove(medicine);
+      } else {
+        cartItems[medicine] = cartItems[medicine]! - 1;
+      }
+    }
+  }
+
+  void uploadPrescription(String path) {
+    prescriptionImage.value = path;
+  }
+
+  void clearCart() {
+    cartItems.clear();
+    prescriptionImage.value = null;
   }
 }

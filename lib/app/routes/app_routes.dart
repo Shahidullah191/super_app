@@ -26,11 +26,13 @@ class AppRoutes {
   static const String groceryProductList = '/grocery/products';
   static const String groceryCart = '/grocery/cart';
   static const String groceryCheckout = '/grocery/checkout';
+  static const String groceryOrderConfirmation = '/grocery/order-confirm';
 
   // ── Pharmacy ──────────────────────────────────────────────────────────────────
   static const String pharmacyMedicineList = '/pharmacy/medicines';
   static const String pharmacyUploadPrescription = '/pharmacy/prescription';
   static const String pharmacyCheckout = '/pharmacy/checkout';
+  static const String pharmacyOrderConfirmation = '/pharmacy/order-confirm';
 
   // ── Food ─────────────────────────────────────────────────────────────────────
   static const String foodRestaurantList = '/food/restaurants';
@@ -66,6 +68,12 @@ class AppRoutes {
   static const String addMoney = '/wallet/add';
   static const String transactionHistory = '/wallet/transactions';
   static const String notifications = '/notifications';
+  static const String orderHistory = '/orders';
+  static const String settings = '/settings';
+  static const String helpCenter = '/help';
+  static const String paymentMethods = '/payment-methods';
+  static const String orderConfirmation = '/order-confirmation';
+  static const String globalSearch = '/search';
   static const String chatList = '/chat';
   static const String chatDetail = '/chat/:id';
 }

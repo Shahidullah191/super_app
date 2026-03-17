@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/services/location_service.dart';
 
 class MapPickerScreen extends StatefulWidget {
   const MapPickerScreen({super.key});
@@ -13,10 +14,38 @@ class MapPickerScreen extends StatefulWidget {
 }
 
 class _MapPickerScreenState extends State<MapPickerScreen> {
-  LatLng _selectedLocation = const LatLng(
-    23.7940,
-    90.4125,
-  ); // Default: Gulshan 2, Dhaka
+  LatLng _selectedLocation = const LatLng(23.7940, 90.4125);
+  String _address = "Loading address...";
+  GoogleMapController? _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _initLocation();
+  }
+
+  Future<void> _initLocation() async {
+    try {
+      final position = await LocationService.getCurrentPosition();
+      if (position != null) {
+        final latLng = LatLng(position.latitude, position.longitude);
+        setState(() {
+          _selectedLocation = latLng;
+        });
+        _mapController?.animateCamera(CameraUpdate.newLatLng(latLng));
+        _updateAddress(latLng);
+      }
+    } catch (e) {
+      _updateAddress(_selectedLocation);
+    }
+  }
+
+  Future<void> _updateAddress(LatLng position) async {
+    final address = await LocationService.getAddressFromLatLng(position);
+    setState(() {
+      _address = address;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +58,14 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
               target: _selectedLocation,
               zoom: 15,
             ),
-            onMapCreated: (controller) {},
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            onMapCreated: (controller) => _mapController = controller,
             onCameraMove: (position) {
               _selectedLocation = position.target;
+            },
+            onCameraIdle: () {
+              _updateAddress(_selectedLocation);
             },
           ),
           const Center(
@@ -79,7 +113,7 @@ class _MapPickerScreenState extends State<MapPickerScreen> {
                         ),
                       ),
                       Text(
-                        'Gulshan 2, Dhaka, Bangladesh',
+                        _address,
                         style: AppTextStyles.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                         ),

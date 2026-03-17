@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
-import '../../../../core/controllers/language_controller.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/state_widgets.dart';
@@ -18,8 +17,9 @@ class ProfileScreen extends GetView<ProfileController> {
       body: Obx(() {
         if (controller.isLoading.value) return const LoadingWidget();
         final p = controller.profile.value;
-        if (p == null)
+        if (p == null) {
           return const AppErrorWidget(message: 'Failed to load profile');
+        }
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -67,15 +67,23 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
               _ProfileMenuItem(
                 icon: Icons.history,
-                label: 'Order History',
-                onTap: () => Get.toNamed(AppRoutes.ecommerceOrderHistory),
+                label: 'order_history'.tr,
+                onTap: () => Get.toNamed(AppRoutes.orderHistory),
               ),
               _ProfileMenuItem(
-                icon: Icons.language,
-                label: Get.find<LanguageController>().isEnglish
-                    ? 'বাংলা (Bengali)'
-                    : 'English',
-                onTap: () => Get.find<LanguageController>().toggleLanguage(),
+                icon: Icons.payment_outlined,
+                label: 'payment_methods'.tr,
+                onTap: () => Get.toNamed(AppRoutes.paymentMethods),
+              ),
+              _ProfileMenuItem(
+                icon: Icons.settings_outlined,
+                label: 'settings'.tr,
+                onTap: () => Get.toNamed(AppRoutes.settings),
+              ),
+              _ProfileMenuItem(
+                icon: Icons.help_outline,
+                label: 'help_center'.tr,
+                onTap: () => Get.toNamed(AppRoutes.helpCenter),
               ),
               _ProfileMenuItem(
                 icon: Icons.notifications_outlined,

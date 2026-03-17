@@ -99,7 +99,7 @@ class RegisterScreen extends GetView<AuthController> {
                     isLoading: controller.isLoading.value,
                     onPressed: () {
 
-                      Get.toNamed(AppRoutes.mainNav);
+                      Get.offAllNamed(AppRoutes.mainNav);
 
                       /*if (formKey.currentState!.validate()) {
                         controller.register(

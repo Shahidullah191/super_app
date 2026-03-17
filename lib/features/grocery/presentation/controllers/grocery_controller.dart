@@ -1,9 +1,16 @@
 import 'package:get/get.dart';
+import '../../data/models/grocery_product_model.dart';
 import '../../data/models/grocery_store_model.dart';
 
 class GroceryController extends GetxController {
   final isLoading = false.obs;
   final stores = <GroceryStoreModel>[].obs;
+  final products = <GroceryProductModel>[].obs;
+  final cartItems = <GroceryProductModel, int>{}.obs;
+
+  double get subtotal => cartItems.entries
+      .map((e) => e.key.price * e.value)
+      .fold(0, (a, b) => a + b);
 
   @override
   void onInit() {
@@ -47,5 +54,74 @@ class GroceryController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> fetchProducts(int storeId) async {
+    isLoading.value = true;
+    try {
+      // ── Demo Data ──────────────────────────────────────────────────────────
+      products.value = [
+        GroceryProductModel(
+          id: 1,
+          name: 'Fresh Apples',
+          image:
+              'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?q=80&w=2074&auto=format&fit=crop',
+          price: 180.0,
+          unit: '1 kg',
+          category: 'Fruits',
+        ),
+        GroceryProductModel(
+          id: 2,
+          name: 'Organic Milk',
+          image:
+              'https://images.unsplash.com/photo-1563636619-e9107b1c196e?q=80&w=1964&auto=format&fit=crop',
+          price: 90.0,
+          unit: '1 L',
+          category: 'Dairy',
+        ),
+        GroceryProductModel(
+          id: 3,
+          name: 'Brown Bread',
+          image:
+              'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop',
+          price: 65.0,
+          unit: '400g',
+          category: 'Bakery',
+        ),
+        GroceryProductModel(
+          id: 4,
+          name: 'Farm Eggs',
+          image:
+              'https://images.unsplash.com/photo-1582722872445-44dc5f7e3cba?q=80&w=2070&auto=format&fit=crop',
+          price: 145.0,
+          unit: '12 pcs',
+          category: 'Dairy',
+        ),
+      ];
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void addToCart(GroceryProductModel product) {
+    if (cartItems.containsKey(product)) {
+      cartItems[product] = cartItems[product]! + 1;
+    } else {
+      cartItems[product] = 1;
+    }
+  }
+
+  void removeFromCart(GroceryProductModel product) {
+    if (cartItems.containsKey(product)) {
+      if (cartItems[product] == 1) {
+        cartItems.remove(product);
+      } else {
+        cartItems[product] = cartItems[product]! - 1;
+      }
+    }
+  }
+
+  void clearCart() {
+    cartItems.clear();
   }
 }

@@ -119,7 +119,7 @@ const Map<String, String> bn = {
   'pharmacy_medicines': 'ফার্মেসি ঔষধ',
   'no_medicines': 'কোন ঔষধ পাওয়া যায়নি',
   'no_medicines_sub': 'অন্য ঔষধ খুঁজে দেখুন',
-  'prescription_upload_coming_soon': 'প্রেসক্রিপশন আপলোড শীঘ্রই আসছে!',
+  'upload_prescription': 'প্রেসক্রিপশন আপলোড',
   'restaurants': 'রেস্টুরেন্ট',
   'no_restaurants': 'কোন রেস্টুরেন্ট পাওয়া যায়নি',
   'no_restaurants_sub': 'অন্য এলাকায় খুঁজে দেখুন',
@@ -204,4 +204,12 @@ const Map<String, String> bn = {
   'status_out_for_delivery': 'ডেলিভারিতে',
   'status_completed': 'সম্পন্ন',
   'status_cancelled': 'বাতিল',
+
+  // ── Settings & Help ──────────────────────────────────────────────────────────
+  'settings': 'সেটিংস',
+  'help_center': 'হেল্প সেন্টার',
+  'payment_methods': 'পেমেন্ট মেথড',
+  'no_orders': 'কোনো অর্ডার পাওয়া যায়নি',
+  'track_order': 'অর্ডার ট্র্যাক করুন',
+  'chat': 'চ্যাট',
 };
