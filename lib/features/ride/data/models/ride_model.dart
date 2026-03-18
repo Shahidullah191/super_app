@@ -14,6 +14,17 @@ class RideTypeModel {
     required this.perKmRate,
     required this.capacity,
   });
+
+  factory RideTypeModel.fromJson(Map<String, dynamic> json) {
+    return RideTypeModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      image: json['image'] as String,
+      baseFare: (json['base_fare'] as num).toDouble(),
+      perKmRate: (json['per_km_rate'] as num).toDouble(),
+      capacity: json['capacity'] as String,
+    );
+  }
 }
 
 class DriverModel {
@@ -38,4 +49,18 @@ class DriverModel {
     required this.lat,
     required this.lng,
   });
+
+  factory DriverModel.fromJson(Map<String, dynamic> json) {
+    return DriverModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      image: json['image'] as String,
+      phone: json['phone'] as String,
+      rating: (json['rating'] as num).toDouble(),
+      vehicleName: json['vehicle_name'] as String,
+      vehicleNumber: json['vehicle_number'] as String,
+      lat: (json['lat'] as num).toDouble(),
+      lng: (json['lng'] as num).toDouble(),
+    );
+  }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/pharmacy_controller.dart';
 import '../../data/models/medicine_model.dart';
@@ -146,11 +147,10 @@ class _MedicineCard extends GetView<PharmacyController> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                medicine.image,
+              child: CustomNetworkImage(
+                image: medicine.image,
                 width: 80,
                 height: 80,
-                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 12),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/ecommerce_controller.dart';
 
@@ -194,14 +195,9 @@ class _ProductCard extends StatelessWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: Image.network(
-                  product.image,
-                  fit: BoxFit.cover,
+                child: CustomNetworkImage(
+                  image: product.image,
                   width: double.infinity,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: AppColors.inputFill,
-                    child: const Icon(Icons.image_not_supported_outlined),
-                  ),
                 ),
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -107,10 +108,14 @@ class HomeScreen extends GetView<HomeController> {
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.primary, width: 2),
             ),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 22,
-              backgroundImage: NetworkImage(
-                'https://i.pravatar.cc/150?u=shahid',
+              child: ClipOval(
+                child: CustomNetworkImage(
+                  image: 'https://i.pravatar.cc/150?u=shahid',
+                  width: 44,
+                  height: 44,
+                ),
               ),
             ),
           ),
@@ -203,48 +208,50 @@ class HomeScreen extends GetView<HomeController> {
             : PageView.builder(
                 controller: PageController(viewportFraction: 1.0),
                 itemCount: controller.banners.length,
-                itemBuilder: (_, i) => Container(
-                  margin: const EdgeInsets.only(right: 0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                      image: NetworkImage(controller.banners[i].imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
+                itemBuilder: (_, i) => Stack(
+                  children: [
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomRight,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.6),
-                          Colors.transparent,
+                      child: CustomNetworkImage(
+                        image: controller.banners[i].imageUrl,
+                        width: double.infinity,
+                        height: 180,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomRight,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.6),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Special Offer',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: Colors.white70,
+                            ),
+                          ),
+                          const Text(
+                            'Get 50% OFF on your first order',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Special Offer',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: Colors.white70,
-                          ),
-                        ),
-                        const Text(
-                          'Get 50% OFF on your first order',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
               ),
       ),
@@ -348,11 +355,11 @@ class HomeScreen extends GetView<HomeController> {
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(20),
                         ),
-                        child: Image.network(
-                          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop',
+                        child: CustomNetworkImage(
+                          image:
+                              'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop',
                           height: 130,
                           width: double.infinity,
-                          fit: BoxFit.cover,
                         ),
                       ),
                       Padding(

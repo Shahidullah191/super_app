@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/food_controller.dart';
 import '../../../../app/routes/app_routes.dart';
@@ -53,11 +54,10 @@ class FoodCartScreen extends GetView<FoodController> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            item.image,
+                          child: CustomNetworkImage(
+                            image: item.image,
                             width: 70,
                             height: 70,
-                            fit: BoxFit.cover,
                           ),
                         ),
                         const SizedBox(width: 16),

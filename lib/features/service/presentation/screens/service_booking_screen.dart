@@ -11,6 +11,10 @@ class ServiceBookingScreen extends GetView<ServiceController> {
 
   @override
   Widget build(BuildContext context) {
+    final dateController = TextEditingController();
+    final timeController = TextEditingController();
+    final descriptionController = TextEditingController();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('Book Service')),
@@ -21,29 +25,58 @@ class ServiceBookingScreen extends GetView<ServiceController> {
           children: [
             Text('Select Date & Time', style: AppTextStyles.heading3),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Select Date',
-              prefixIcon: Icon(Icons.calendar_today),
+              controller: dateController,
+              prefixIcon: const Icon(Icons.calendar_today),
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 30)),
+                );
+                if (date != null) {
+                  dateController.text = date.toIso8601String().split('T')[0];
+                }
+              },
             ),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Select Time',
-              prefixIcon: Icon(Icons.access_time),
+              controller: timeController,
+              prefixIcon: const Icon(Icons.access_time),
+              onTap: () async {
+                final time = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                );
+                if (time != null) {
+                  timeController.text = time.format(context);
+                }
+              },
             ),
             const SizedBox(height: 24),
             Text('Problem Description', style: AppTextStyles.heading3),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Describe your problem...',
+              controller: descriptionController,
               maxLines: 4,
             ),
             const SizedBox(height: 32),
-            CustomButton(
-              label: 'Confirm Booking',
-              onPressed: () {
-                Get.snackbar('Success', 'Service booking confirmed!');
-                Get.offAllNamed('/main-nav');
-              },
+            Obx(
+              () => CustomButton(
+                label: 'Confirm Booking',
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.bookService({
+                    'date': dateController.text,
+                    'time': timeController.text,
+                    'description': descriptionController.text,
+                  });
+                },
+              ),
             ),
           ],
         ),

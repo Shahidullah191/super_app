@@ -1,12 +1,18 @@
 import 'package:get/get.dart';
 import '../../data/models/grocery_product_model.dart';
 import '../../data/models/grocery_store_model.dart';
+import '../../data/repositories/grocery_repository.dart';
+import '../../../../app/routes/app_routes.dart';
+import '../../../../core/network/api_client.dart';
 
 class GroceryController extends GetxController {
+  final _repo = GroceryRepository();
+
   final isLoading = false.obs;
   final stores = <GroceryStoreModel>[].obs;
   final products = <GroceryProductModel>[].obs;
   final cartItems = <GroceryProductModel, int>{}.obs;
+  final groceryOrders = <Map<String, dynamic>>[].obs;
 
   double get subtotal => cartItems.entries
       .map((e) => e.key.price * e.value)
@@ -16,6 +22,7 @@ class GroceryController extends GetxController {
   void onInit() {
     super.onInit();
     fetchStores();
+    fetchGroceryOrderHistory();
   }
 
   Future<void> fetchStores() async {
@@ -51,6 +58,11 @@ class GroceryController extends GetxController {
           deliveryTime: '30-45 min',
         ),
       ];
+
+      final res = await _repo.getStores();
+      if (res.isNotEmpty) stores.value = res;
+    } on AppException catch (_) {
+      // Silent fail - use demo data
     } finally {
       isLoading.value = false;
     }
@@ -98,6 +110,57 @@ class GroceryController extends GetxController {
           category: 'Dairy',
         ),
       ];
+
+      final res = await _repo.getProducts(storeId);
+      if (res.isNotEmpty) products.value = res;
+    } on AppException catch (_) {
+      // Silent fail - use demo data
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchGroceryOrderHistory() async {
+    try {
+      final res = await _repo.getGroceryOrderHistory();
+      if (res.isNotEmpty) groceryOrders.value = res;
+    } catch (_) {
+      // Silent fail
+    }
+  }
+
+  Future<void> placeOrder(Map<String, dynamic> orderData) async {
+    isLoading.value = true;
+    try {
+      // ── Demo Logic ─────────────────────────────────────────────────────────
+      final newOrder = {
+        'id': DateTime.now().millisecondsSinceEpoch,
+        'order_number': 'GROC-${DateTime.now().millisecondsSinceEpoch}',
+        'items': cartItems.entries
+            .map(
+              (e) => {
+                'name': e.key.name,
+                'quantity': e.value,
+                'price': e.key.price,
+              },
+            )
+            .toList(),
+        'subtotal': subtotal,
+        'delivery_fee': 50,
+        'total': subtotal + 50,
+        'status': 'Pending',
+        'date': DateTime.now().toIso8601String(),
+        'address': orderData['address'],
+        'payment_method': orderData['payment_method'],
+      };
+
+      groceryOrders.insert(0, newOrder);
+      await _repo.placeGroceryOrder(newOrder);
+
+      clearCart();
+      Get.offNamed(AppRoutes.groceryOrderConfirmation);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to place order');
     } finally {
       isLoading.value = false;
     }

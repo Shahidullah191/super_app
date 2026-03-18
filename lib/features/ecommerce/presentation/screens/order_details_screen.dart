@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../app/routes/app_routes.dart';
-import '../../../../shared/orders/data/models/order_model.dart';
+import '../../data/models/order_model.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({super.key});
@@ -63,7 +65,10 @@ class OrderDetailsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Order #${order.id}', style: AppTextStyles.heading3),
+              Text(
+                'Order #${order.orderNumber}',
+                style: AppTextStyles.heading3,
+              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -71,7 +76,7 @@ class OrderDetailsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  order.status.name.tr,
+                  order.status,
                   style: AppTextStyles.label.copyWith(color: AppColors.primary),
                 ),
               ),
@@ -79,7 +84,7 @@ class OrderDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Placed on ${order.date}',
+            'Placed on ${DateFormat('dd MMM yyyy, hh:mm a').format(order.createdAt)}',
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -110,11 +115,20 @@ class OrderDetailsScreen extends StatelessWidget {
               final item = order.items[i];
               return Row(
                 children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CustomNetworkImage(
+                      image: item.productImage,
+                      width: 50,
+                      height: 50,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.name, style: AppTextStyles.bodyMedium),
+                        Text(item.productName, style: AppTextStyles.bodyMedium),
                         Text(
                           'Qty: ${item.quantity}',
                           style: AppTextStyles.caption,
@@ -147,10 +161,11 @@ class OrderDetailsScreen extends StatelessWidget {
         children: [
           Text('Summary', style: AppTextStyles.heading3),
           const SizedBox(height: 12),
-          _buildSummaryRow('Subtotal', order.totalAmount - 50),
-          _buildSummaryRow('Delivery Fee', 50),
+          _buildSummaryRow('Subtotal', order.subtotal),
+          _buildSummaryRow('Tax', order.tax),
+          _buildSummaryRow('Delivery Fee', order.shipping),
           const Divider(height: 24),
-          _buildSummaryRow('Total', order.totalAmount, isTotal: true),
+          _buildSummaryRow('Total', order.total, isTotal: true),
         ],
       ),
     );
@@ -169,7 +184,7 @@ class OrderDetailsScreen extends StatelessWidget {
                 : AppTextStyles.bodyMedium,
           ),
           Text(
-            '৳${amount.toStringAsFixed(0)}',
+            '৳${amount.toStringAsFixed(2)}',
             style: isTotal
                 ? AppTextStyles.price.copyWith(color: AppColors.primary)
                 : AppTextStyles.bodyMedium,

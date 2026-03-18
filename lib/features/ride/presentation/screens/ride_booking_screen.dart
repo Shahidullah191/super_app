@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/ride_controller.dart';
 
 class RideBookingScreen extends GetView<RideController> {
@@ -149,7 +150,7 @@ class RideBookingScreen extends GetView<RideController> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.network(type.image, height: 40),
+                            CustomNetworkImage(image: type.image, height: 40),
                             const SizedBox(height: 8),
                             Text(
                               type.name,

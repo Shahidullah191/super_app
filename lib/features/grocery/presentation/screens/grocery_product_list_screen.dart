@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/grocery_controller.dart';
 import '../../data/models/grocery_product_model.dart';
@@ -109,10 +110,9 @@ class _ProductCard extends GetView<GroceryController> {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: Image.network(
-                  product.image,
+                child: CustomNetworkImage(
+                  image: product.image,
                   width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
               ),
             ),

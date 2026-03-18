@@ -11,6 +11,13 @@ class CourierBookingScreen extends GetView<CourierController> {
 
   @override
   Widget build(BuildContext context) {
+    final senderNameController = TextEditingController();
+    final senderPhoneController = TextEditingController();
+    final pickupAddressController = TextEditingController();
+    final receiverNameController = TextEditingController();
+    final receiverPhoneController = TextEditingController();
+    final deliveryAddressController = TextEditingController();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('courier_booking'.tr)),
@@ -25,45 +32,61 @@ class CourierBookingScreen extends GetView<CourierController> {
             const SizedBox(height: 24),
             _buildSectionTitle('sender_details'.tr),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Sender Name',
-              prefixIcon: Icon(Icons.person_outline),
+              controller: senderNameController,
+              prefixIcon: const Icon(Icons.person_outline),
             ),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Sender Phone',
-              prefixIcon: Icon(Icons.phone_outlined),
+              controller: senderPhoneController,
+              prefixIcon: const Icon(Icons.phone_outlined),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Pickup Address',
-              prefixIcon: Icon(Icons.location_on_outlined),
+              controller: pickupAddressController,
+              prefixIcon: const Icon(Icons.location_on_outlined),
             ),
             const SizedBox(height: 24),
             _buildSectionTitle('receiver_details'.tr),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Receiver Name',
-              prefixIcon: Icon(Icons.person_outline),
+              controller: receiverNameController,
+              prefixIcon: const Icon(Icons.person_outline),
             ),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Receiver Phone',
-              prefixIcon: Icon(Icons.phone_outlined),
+              controller: receiverPhoneController,
+              prefixIcon: const Icon(Icons.phone_outlined),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 12),
-            const CustomTextField(
+            CustomTextField(
               hint: 'Delivery Address',
-              prefixIcon: Icon(Icons.location_on_outlined),
+              controller: deliveryAddressController,
+              prefixIcon: const Icon(Icons.location_on_outlined),
             ),
             const SizedBox(height: 32),
-            CustomButton(
-              label: 'estimate_price'.tr,
-              onPressed: () {
-                Get.toNamed('/courier/parcel/123');
-              },
+            Obx(
+              () => CustomButton(
+                label: 'estimate_price'.tr,
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.bookCourier({
+                    'sender_name': senderNameController.text,
+                    'sender_phone': senderPhoneController.text,
+                    'pickup_address': pickupAddressController.text,
+                    'receiver_name': receiverNameController.text,
+                    'receiver_phone': receiverPhoneController.text,
+                    'delivery_address': deliveryAddressController.text,
+                  });
+                },
+              ),
             ),
           ],
         ),

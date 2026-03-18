@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/food_controller.dart';
 import '../../data/models/restaurant_model.dart';
@@ -107,7 +108,11 @@ class _RestaurantMenuScreenState extends State<RestaurantMenuScreen> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(restaurant.image, fit: BoxFit.cover),
+            CustomNetworkImage(
+              image: restaurant.image,
+              width: double.infinity,
+              height: double.infinity,
+            ),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -254,11 +259,10 @@ class _MenuItemTile extends GetView<FoodController> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  item.image,
+                child: CustomNetworkImage(
+                  image: item.image,
                   width: 90,
                   height: 90,
-                  fit: BoxFit.cover,
                 ),
               ),
               Positioned(

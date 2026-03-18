@@ -37,6 +37,9 @@ class ApiEndpoints {
   static String ecommerceProductDetails(int id) => '/ecommerce/products/$id';
   static const String ecommerceOrders = '/ecommerce/orders';
   static String ecommerceOrderDetails(int id) => '/ecommerce/orders/$id';
+  static const String ecommerceCart = '/ecommerce/cart';
+  static const String ecommerceUpdateCart = '/ecommerce/cart/update';
+  static const String ecommercePlaceOrder = '/ecommerce/orders/place';
 
   // ── Grocery ───────────────────────────────────────────────────────────────────
   static const String groceryStores = '/grocery/stores';

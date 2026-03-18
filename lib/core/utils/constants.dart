@@ -6,6 +6,7 @@ class AppConstants {
   static const String tokenKey = 'auth_token';
   static const String userKey = 'auth_user';
   static const String themeKey = 'app_theme';
+  static const String onboardingKey = 'has_seen_onboarding';
 
   // ── API ───────────────────────────────────────────────────────────────────────
   static const Duration connectTimeout = Duration(seconds: 30);

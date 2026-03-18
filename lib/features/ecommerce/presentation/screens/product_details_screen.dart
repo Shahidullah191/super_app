@@ -4,6 +4,7 @@ import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../../data/models/product_model.dart';
 import '../controllers/ecommerce_controller.dart';
@@ -117,10 +118,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               onPageChanged: (index) =>
                   setState(() => selectedImageIndex = index),
               itemCount: images.length,
-              itemBuilder: (_, i) => Image.network(
-                images[i],
-                fit: BoxFit.contain,
+              itemBuilder: (_, i) => CustomNetworkImage(
+                image: images[i],
                 width: double.infinity,
+                fit: BoxFit.contain,
               ),
             ),
           ),
@@ -283,10 +284,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: CustomButton(
               label: 'add_to_cart'.tr,
               isOutlined: true,
-              onPressed: () {
-                // TODO: Add to cart
-                Get.snackbar('success'.tr, 'added_to_cart'.tr);
-              },
+              onPressed: () => controller.addToCart(product!),
             ),
           ),
           const SizedBox(width: 16),
@@ -294,8 +292,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: CustomButton(
               label: 'buy_now'.tr,
               onPressed: () {
-                // TODO: Buy now
-                Get.toNamed('/checkout');
+                controller.addToCart(product!);
+                Get.toNamed(AppRoutes.cart);
               },
             ),
           ),

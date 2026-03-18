@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/pharmacy_controller.dart';
 import '../../../../app/routes/app_routes.dart';
@@ -89,11 +90,11 @@ class PharmacyCartScreen extends GetView<PharmacyController> {
           const SizedBox(height: 12),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop', // Placeholder for uploaded image
+            child: const CustomNetworkImage(
+              image:
+                  'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop', // Placeholder for uploaded image
               height: 150,
               width: double.infinity,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(height: 8),
@@ -167,11 +168,10 @@ class _CartItemTile extends GetView<PharmacyController> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              medicine.image,
+            child: CustomNetworkImage(
+              image: medicine.image,
               width: 60,
               height: 60,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 12),

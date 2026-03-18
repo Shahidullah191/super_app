@@ -1,10 +1,16 @@
 import 'package:get/get.dart';
 import '../../data/models/medicine_model.dart';
+import '../../data/repositories/pharmacy_repository.dart';
+import '../../../../app/routes/app_routes.dart';
+import '../../../../core/network/api_client.dart';
 
 class PharmacyController extends GetxController {
+  final _repo = PharmacyRepository();
+
   final isLoading = false.obs;
   final medicines = <MedicineModel>[].obs;
   final cartItems = <MedicineModel, int>{}.obs;
+  final pharmacyOrders = <Map<String, dynamic>>[].obs;
   final prescriptionImage = Rxn<String>();
 
   double get subtotal => cartItems.entries
@@ -15,6 +21,7 @@ class PharmacyController extends GetxController {
   void onInit() {
     super.onInit();
     fetchMedicines();
+    fetchPharmacyOrderHistory();
   }
 
   Future<void> fetchMedicines() async {
@@ -56,6 +63,64 @@ class PharmacyController extends GetxController {
           strength: '120mg',
         ),
       ];
+
+      final res = await _repo.getMedicines();
+      if (res.isNotEmpty) medicines.value = res;
+    } on AppException catch (_) {
+      // Silent fail - use demo data
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchPharmacyOrderHistory() async {
+    try {
+      final res = await _repo.getPharmacyOrderHistory();
+      if (res.isNotEmpty) pharmacyOrders.value = res;
+    } catch (_) {
+      // Silent fail
+    }
+  }
+
+  Future<void> placeOrder(Map<String, dynamic> orderData) async {
+    isLoading.value = true;
+    try {
+      // ── Demo Logic ─────────────────────────────────────────────────────────
+      final newOrder = {
+        'id': DateTime.now().millisecondsSinceEpoch,
+        'order_number': 'PHAR-${DateTime.now().millisecondsSinceEpoch}',
+        'items': cartItems.entries
+            .map(
+              (e) => {
+                'name': e.key.name,
+                'quantity': e.value,
+                'price': e.key.price,
+              },
+            )
+            .toList(),
+        'subtotal': subtotal,
+        'delivery_fee': 40,
+        'total': subtotal + 40,
+        'status': 'Pending',
+        'date': DateTime.now().toIso8601String(),
+        'address': orderData['address'],
+        'payment_method': orderData['payment_method'],
+        'prescription': prescriptionImage.value,
+      };
+
+      pharmacyOrders.insert(0, newOrder);
+      await _repo.placePharmacyOrder(newOrder);
+
+      clearCart();
+      Get.offNamed(
+        AppRoutes.pharmacyOrderConfirmation,
+        arguments: {
+          'title': 'Order Placed Successfully!',
+          'subTitle': 'Your medicines will be delivered after verification.',
+        },
+      );
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to place order');
     } finally {
       isLoading.value = false;
     }

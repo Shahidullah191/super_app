@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/ecommerce_controller.dart';
 
@@ -35,11 +36,10 @@ class WishlistScreen extends GetView<EcommerceController> {
                 contentPadding: const EdgeInsets.all(12),
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    product.image,
+                  child: CustomNetworkImage(
+                    image: product.image,
                     width: 60,
                     height: 60,
-                    fit: BoxFit.cover,
                   ),
                 ),
                 title: Text(

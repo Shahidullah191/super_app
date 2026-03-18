@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/ride_controller.dart';
 
 class RideTrackingScreen extends GetView<RideController> {
@@ -126,11 +127,10 @@ class RideTrackingScreen extends GetView<RideController> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    driver.image,
+                  child: CustomNetworkImage(
+                    image: driver.image,
                     width: 60,
                     height: 60,
-                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(width: 16),

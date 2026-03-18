@@ -14,4 +14,15 @@ class GroceryProductModel {
     required this.unit,
     required this.category,
   });
+
+  factory GroceryProductModel.fromJson(Map<String, dynamic> json) {
+    return GroceryProductModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      image: json['image'] as String,
+      price: (json['price'] as num).toDouble(),
+      unit: json['unit'] as String,
+      category: json['category'] as String,
+    );
+  }
 }

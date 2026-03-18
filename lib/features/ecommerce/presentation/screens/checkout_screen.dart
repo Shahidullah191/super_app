@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
-import '../controllers/cart_controller.dart';
+import '../controllers/ecommerce_controller.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends GetView<EcommerceController> {
   const CheckoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.find<CartController>();
     final selectedPaymentMethod = 'cod'.obs;
+    final addressController = TextEditingController(
+      text: '123 Main Street, Dhaka, Bangladesh',
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -28,11 +31,14 @@ class CheckoutScreen extends StatelessWidget {
             _buildPaymentMethods(selectedPaymentMethod),
             const SizedBox(height: 24),
             _buildSectionTitle('order_summary'.tr),
-            _buildOrderSummary(cartController),
+            _buildOrderSummary(),
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(cartController),
+      bottomNavigationBar: _buildBottomBar(
+        selectedPaymentMethod,
+        addressController,
+      ),
     );
   }
 
@@ -76,7 +82,7 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => Get.toNamed('/address/book'),
+            onPressed: () => Get.toNamed(AppRoutes.addressBook),
             child: Text('change'.tr),
           ),
         ],
@@ -132,7 +138,7 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderSummary(CartController controller) {
+  Widget _buildOrderSummary() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -142,7 +148,7 @@ class CheckoutScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ...controller.cartItems.map(
+          ...controller.cart.value.items.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
@@ -157,7 +163,7 @@ class CheckoutScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '৳${item.totalPrice.toStringAsFixed(0)}',
+                    '৳${item.total.toStringAsFixed(0)}',
                     style: AppTextStyles.caption,
                   ),
                 ],
@@ -165,11 +171,18 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
           const Divider(height: 24),
-          _buildSummaryRow('subtotal'.tr, controller.subtotal),
+          _buildSummaryRow('subtotal'.tr, controller.cart.value.subtotal),
           const SizedBox(height: 8),
-          _buildSummaryRow('delivery_charge'.tr, controller.deliveryCharge),
+          _buildSummaryRow(
+            'delivery_charge'.tr,
+            controller.cart.value.shipping,
+          ),
           const Divider(height: 24),
-          _buildSummaryRow('total'.tr, controller.total, isBold: true),
+          _buildSummaryRow(
+            'total'.tr,
+            controller.cart.value.total,
+            isBold: true,
+          ),
         ],
       ),
     );
@@ -198,7 +211,10 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomBar(CartController controller) {
+  Widget _buildBottomBar(
+    RxString selectedPaymentMethod,
+    TextEditingController addressController,
+  ) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -212,13 +228,17 @@ class CheckoutScreen extends StatelessWidget {
         ],
       ),
       child: SafeArea(
-        child: CustomButton(
-          label: 'place_order'.tr,
-          onPressed: () {
-            Get.offAllNamed('/main-nav');
-            Get.snackbar('success'.tr, 'order_placed'.tr);
-            controller.clearCart();
-          },
+        child: Obx(
+          () => CustomButton(
+            label: 'place_order'.tr,
+            isLoading: controller.isLoading.value,
+            onPressed: () {
+              controller.placeOrder({
+                'payment_method': selectedPaymentMethod.value,
+                'address': addressController.text,
+              });
+            },
+          ),
         ),
       ),
     );

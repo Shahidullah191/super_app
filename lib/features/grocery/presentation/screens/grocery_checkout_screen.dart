@@ -11,7 +11,13 @@ class GroceryCheckoutScreen extends GetView<GroceryController> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedPaymentMethod = 'cod'.obs;
+    final addressController = TextEditingController(
+      text: 'Gulshan 2, Dhaka, Bangladesh',
+    );
+
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('checkout'.tr)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -19,20 +25,25 @@ class GroceryCheckoutScreen extends GetView<GroceryController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionTitle('delivery_address'.tr),
-            _buildAddressCard(),
+            _buildAddressCard(addressController),
             const SizedBox(height: 24),
             _buildSectionTitle('payment_method'.tr),
-            _buildPaymentCard(),
+            _buildPaymentMethods(selectedPaymentMethod),
             const SizedBox(height: 24),
             _buildSectionTitle('order_summary'.tr),
             _buildOrderSummary(),
             const SizedBox(height: 40),
-            CustomButton(
-              label: 'place_order'.tr,
-              onPressed: () {
-                controller.clearCart();
-                Get.offNamed(AppRoutes.groceryOrderConfirmation);
-              },
+            Obx(
+              () => CustomButton(
+                label: 'place_order'.tr,
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.placeOrder({
+                    'payment_method': selectedPaymentMethod.value,
+                    'address': addressController.text,
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -50,7 +61,7 @@ class GroceryCheckoutScreen extends GetView<GroceryController> {
     );
   }
 
-  Widget _buildAddressCard() {
+  Widget _buildAddressCard(TextEditingController addressController) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -62,28 +73,71 @@ class GroceryCheckoutScreen extends GetView<GroceryController> {
           'Home',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: const Text('Gulshan 2, Dhaka, Bangladesh'),
-        trailing: TextButton(onPressed: () {}, child: Text('change'.tr)),
+        subtitle: Text(addressController.text),
+        trailing: TextButton(
+          onPressed: () => Get.toNamed(AppRoutes.addressBook),
+          child: Text('change'.tr),
+        ),
       ),
     );
   }
 
-  Widget _buildPaymentCard() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: const Icon(
-          Icons.account_balance_wallet_outlined,
-          color: AppColors.primary,
+  Widget _buildPaymentMethods(RxString selected) {
+    return Column(
+      children: [
+        _buildPaymentOption(
+          Icons.money_rounded,
+          'cod',
+          'cash_on_delivery'.tr,
+          selected,
         ),
-        title: const Text(
-          'Wallet Balance',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const SizedBox(height: 12),
+        _buildPaymentOption(
+          Icons.account_balance_wallet_rounded,
+          'wallet',
+          'wallet_balance'.tr,
+          selected,
         ),
-        subtitle: const Text('Available: ৳2,500.00'),
-        trailing: TextButton(onPressed: () {}, child: Text('change'.tr)),
-      ),
+      ],
     );
+  }
+
+  Widget _buildPaymentOption(
+    IconData icon,
+    String value,
+    String label,
+    RxString selected,
+  ) {
+    return Obx(() {
+      final isSelected = selected.value == value;
+      return GestureDetector(
+        onTap: () => selected.value = value,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: isSelected ? AppColors.primary : Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+          child: ListTile(
+            leading: Icon(
+              icon,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+            ),
+            title: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            trailing: isSelected
+                ? const Icon(Icons.check_circle, color: AppColors.primary)
+                : null,
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildOrderSummary() {

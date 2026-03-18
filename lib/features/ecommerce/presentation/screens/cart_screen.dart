@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
-import '../controllers/cart_controller.dart';
+import '../controllers/ecommerce_controller.dart';
+import '../../data/models/cart_model.dart';
 
-class CartScreen extends GetView<CartController> {
+class CartScreen extends GetView<EcommerceController> {
   const CartScreen({super.key});
 
   @override
@@ -17,17 +19,18 @@ class CartScreen extends GetView<CartController> {
         title: Text('cart'.tr),
         actions: [
           Obx(
-            () => controller.cartItems.isNotEmpty
+            () => controller.cart.value.items.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.delete_outline),
-                    onPressed: controller.clearCart,
+                    onPressed: () =>
+                        controller.cart.value = CartModel(items: []),
                   )
                 : const SizedBox.shrink(),
           ),
         ],
       ),
       body: Obx(() {
-        if (controller.cartItems.isEmpty) {
+        if (controller.cart.value.items.isEmpty) {
           return EmptyWidget(
             message: 'cart_empty'.tr,
             subMessage: 'cart_empty_sub'.tr,
@@ -40,11 +43,11 @@ class CartScreen extends GetView<CartController> {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.all(16),
-                itemCount: controller.cartItems.length,
+                itemCount: controller.cart.value.items.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 12),
                 itemBuilder: (context, index) =>
-                    _CartItemTile(item: controller.cartItems[index]),
+                    _CartItemTile(item: controller.cart.value.items[index]),
               ),
             ),
             _buildSummary(),
@@ -76,7 +79,7 @@ class CartScreen extends GetView<CartController> {
               children: [
                 Text('subtotal'.tr, style: AppTextStyles.bodyMedium),
                 Text(
-                  '৳${controller.subtotal.toStringAsFixed(2)}',
+                  '৳${controller.cart.value.subtotal.toStringAsFixed(2)}',
                   style: AppTextStyles.bodyMedium,
                 ),
               ],
@@ -87,7 +90,7 @@ class CartScreen extends GetView<CartController> {
               children: [
                 Text('delivery_charge'.tr, style: AppTextStyles.bodyMedium),
                 Text(
-                  '৳${controller.deliveryCharge.toStringAsFixed(2)}',
+                  '৳${controller.cart.value.shipping.toStringAsFixed(2)}',
                   style: AppTextStyles.bodyMedium,
                 ),
               ],
@@ -98,7 +101,7 @@ class CartScreen extends GetView<CartController> {
               children: [
                 Text('total'.tr, style: AppTextStyles.heading3),
                 Text(
-                  '৳${controller.total.toStringAsFixed(2)}',
+                  '৳${controller.cart.value.total.toStringAsFixed(2)}',
                   style: AppTextStyles.heading3.copyWith(
                     color: AppColors.primary,
                   ),
@@ -118,12 +121,12 @@ class CartScreen extends GetView<CartController> {
 }
 
 class _CartItemTile extends StatelessWidget {
-  final CartItem item;
+  final CartItemModel item;
   const _CartItemTile({required this.item});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CartController>();
+    final controller = Get.find<EcommerceController>();
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -136,11 +139,10 @@ class _CartItemTile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              item.product.image,
+            child: CustomNetworkImage(
+              image: item.product.image,
               width: 80,
               height: 80,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 12),

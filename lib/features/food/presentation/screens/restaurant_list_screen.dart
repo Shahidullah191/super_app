@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/food_controller.dart';
 import '../../data/models/restaurant_model.dart';
@@ -71,11 +72,10 @@ class _RestaurantCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(20),
                   ),
-                  child: Image.network(
-                    restaurant.image,
+                  child: CustomNetworkImage(
+                    image: restaurant.image,
                     height: 180,
                     width: double.infinity,
-                    fit: BoxFit.cover,
                   ),
                 ),
                 Positioned(

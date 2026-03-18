@@ -36,6 +36,12 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     await Future.delayed(const Duration(milliseconds: 2200));
+
+    if (!StorageService.hasSeenOnboarding) {
+      Get.offAllNamed(AppRoutes.onboarding);
+      return;
+    }
+
     final route = StorageService.isLoggedIn
         ? AppRoutes.mainNav
         : AppRoutes.login;

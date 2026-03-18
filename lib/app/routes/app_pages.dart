@@ -29,6 +29,15 @@ import 'package:super_app/features/ecommerce/presentation/screens/order_details_
 import 'package:super_app/features/ecommerce/presentation/screens/category_list_screen.dart';
 import 'package:super_app/features/ecommerce/presentation/screens/flash_sale_screen.dart';
 import 'package:super_app/features/ecommerce/presentation/screens/track_order_screen.dart';
+import 'package:super_app/features/ecommerce/presentation/screens/ecommerce_order_history_screen.dart';
+import 'package:super_app/features/food/presentation/screens/food_order_history_screen.dart';
+import 'package:super_app/features/grocery/presentation/screens/grocery_order_history_screen.dart';
+import 'package:super_app/features/pharmacy/presentation/screens/pharmacy_order_history_screen.dart';
+import 'package:super_app/features/ride/presentation/screens/ride_history_screen.dart';
+import 'package:super_app/features/courier/presentation/screens/courier_history_screen.dart';
+import 'package:super_app/features/service/presentation/screens/service_history_screen.dart';
+import 'package:super_app/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:super_app/features/onboarding/bindings/onboarding_binding.dart';
 import '../../features/auth/bindings/auth_binding.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
@@ -60,6 +69,7 @@ import '../../features/service/presentation/screens/service_booking_screen.dart'
 import '../../features/service/presentation/screens/service_category_screen.dart';
 import '../../features/service/presentation/screens/service_provider_screen.dart';
 import '../../features/home/bindings/home_binding.dart';
+import '../../features/main_nav/bindings/main_nav_binding.dart';
 import '../../features/main_nav/main_nav_screen.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../shared/address/bindings/address_binding.dart';
@@ -84,6 +94,11 @@ class AppPages {
   static final routes = [
     GetPage(name: AppRoutes.splash, page: () => const SplashScreen()),
     GetPage(
+      name: AppRoutes.onboarding,
+      page: () => const OnboardingScreen(),
+      binding: OnboardingBinding(),
+    ),
+    GetPage(
       name: AppRoutes.login,
       page: () => const LoginScreen(),
       binding: AuthBinding(),
@@ -106,7 +121,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.mainNav,
       page: () => const MainNavScreen(),
-      bindings: [HomeBinding(), WalletBinding(), ProfileBinding()],
+      bindings: [
+        MainNavBinding(),
+        HomeBinding(),
+        WalletBinding(),
+        ProfileBinding(),
+      ],
     ),
 
     // ── E-commerce ──────────────────────────────────────────────────────────────
@@ -143,6 +163,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.ecommerceOrderDetails,
       page: () => const OrderDetailsScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.ecommerceOrderHistory,
+      page: () => const EcommerceOrderHistoryScreen(),
+      binding: EcommerceBinding(),
     ),
     GetPage(
       name: AppRoutes.ecommerceCategories,
@@ -304,6 +329,36 @@ class AppPages {
       name: AppRoutes.orderHistory,
       page: () => const OrderHistoryScreen(),
       binding: OrderBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.foodOrders,
+      page: () => const FoodOrderHistoryScreen(),
+      binding: FoodBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.groceryOrders,
+      page: () => const GroceryOrderHistoryScreen(),
+      binding: GroceryBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pharmacyOrders,
+      page: () => const PharmacyOrderHistoryScreen(),
+      binding: PharmacyBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.rideHistory,
+      page: () => const RideHistoryScreen(),
+      binding: RideBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.courierHistory,
+      page: () => const CourierHistoryScreen(),
+      binding: CourierBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.serviceHistory,
+      page: () => const ServiceHistoryScreen(),
+      binding: ServiceBinding(),
     ),
     GetPage(name: AppRoutes.settings, page: () => const SettingsScreen()),
     GetPage(name: AppRoutes.helpCenter, page: () => const HelpCenterScreen()),

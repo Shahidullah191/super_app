@@ -4,6 +4,7 @@ import '../../../../app/routes/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/pharmacy_controller.dart';
 
 class PharmacyCheckoutScreen extends GetView<PharmacyController> {
@@ -11,7 +12,13 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedPaymentMethod = 'cod'.obs;
+    final addressController = TextEditingController(
+      text: 'Gulshan 2, Dhaka, Bangladesh',
+    );
+
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('checkout'.tr)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -19,7 +26,7 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionTitle('delivery_address'.tr),
-            _buildAddressCard(),
+            _buildAddressCard(addressController),
             const SizedBox(height: 24),
             if (controller.prescriptionImage.value != null) ...[
               _buildSectionTitle('Prescription'),
@@ -27,24 +34,22 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
               const SizedBox(height: 24),
             ],
             _buildSectionTitle('payment_method'.tr),
-            _buildPaymentCard(),
+            _buildPaymentMethods(selectedPaymentMethod),
             const SizedBox(height: 24),
             _buildSectionTitle('order_summary'.tr),
             _buildOrderSummary(),
             const SizedBox(height: 40),
-            CustomButton(
-              label: 'place_order'.tr,
-              onPressed: () {
-                controller.clearCart();
-                Get.offNamed(
-                  AppRoutes.pharmacyOrderConfirmation,
-                  arguments: {
-                    'title': 'Order Placed Successfully!',
-                    'subTitle':
-                        'Your medicines will be delivered after verification.',
-                  },
-                );
-              },
+            Obx(
+              () => CustomButton(
+                label: 'place_order'.tr,
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.placeOrder({
+                    'payment_method': selectedPaymentMethod.value,
+                    'address': addressController.text,
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -62,7 +67,7 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
     );
   }
 
-  Widget _buildAddressCard() {
+  Widget _buildAddressCard(TextEditingController addressController) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -74,8 +79,11 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
           'Home',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: const Text('Gulshan 2, Dhaka, Bangladesh'),
-        trailing: TextButton(onPressed: () {}, child: Text('change'.tr)),
+        subtitle: Text(addressController.text),
+        trailing: TextButton(
+          onPressed: () => Get.toNamed(AppRoutes.addressBook),
+          child: Text('change'.tr),
+        ),
       ),
     );
   }
@@ -95,33 +103,73 @@ class PharmacyCheckoutScreen extends GetView<PharmacyController> {
         subtitle: const Text('Our pharmacist will review it.'),
         trailing: ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: Image.network(
-            controller.prescriptionImage.value!,
+          child: const CustomNetworkImage(
+            image:
+                'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop',
             width: 40,
             height: 40,
-            fit: BoxFit.cover,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPaymentCard() {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: const Icon(
-          Icons.account_balance_wallet_outlined,
-          color: AppColors.primary,
+  Widget _buildPaymentMethods(RxString selected) {
+    return Column(
+      children: [
+        _buildPaymentOption(
+          Icons.money_rounded,
+          'cod',
+          'cash_on_delivery'.tr,
+          selected,
         ),
-        title: const Text(
-          'Wallet Balance',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        const SizedBox(height: 12),
+        _buildPaymentOption(
+          Icons.account_balance_wallet_rounded,
+          'wallet',
+          'wallet_balance'.tr,
+          selected,
         ),
-        subtitle: const Text('Available: ৳2,500.00'),
-        trailing: TextButton(onPressed: () {}, child: Text('change'.tr)),
-      ),
+      ],
     );
+  }
+
+  Widget _buildPaymentOption(
+    IconData icon,
+    String value,
+    String label,
+    RxString selected,
+  ) {
+    return Obx(() {
+      final isSelected = selected.value == value;
+      return GestureDetector(
+        onTap: () => selected.value = value,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: isSelected ? AppColors.primary : Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+          child: ListTile(
+            leading: Icon(
+              icon,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+            ),
+            title: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            trailing: isSelected
+                ? const Icon(Icons.check_circle, color: AppColors.primary)
+                : null,
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildOrderSummary() {

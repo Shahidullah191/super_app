@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../../../../core/widgets/state_widgets.dart';
 import '../controllers/grocery_controller.dart';
 
@@ -64,11 +65,10 @@ class _StoreCard extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
-              child: Image.network(
-                store.image,
+              child: CustomNetworkImage(
+                image: store.image,
                 height: 150,
                 width: double.infinity,
-                fit: BoxFit.cover,
               ),
             ),
             Padding(

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/pharmacy_controller.dart';
 import '../../data/models/medicine_model.dart';
 
@@ -29,7 +30,10 @@ class MedicineDetailsScreen extends GetView<PharmacyController> {
               width: double.infinity,
               height: 250,
               color: AppColors.white,
-              child: Image.network(medicine.image, fit: BoxFit.contain),
+              child: CustomNetworkImage(
+                image: medicine.image,
+                fit: BoxFit.contain,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20),
@@ -79,6 +83,7 @@ class MedicineDetailsScreen extends GetView<PharmacyController> {
                     'This medicine is used for the treatment of various conditions as prescribed by your doctor. Please follow the dosage instructions carefully.',
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: AppColors.textSecondary,
+                      height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 24),

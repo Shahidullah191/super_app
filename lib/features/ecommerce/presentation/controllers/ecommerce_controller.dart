@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import '../../../../core/network/api_client.dart';
+import '../../data/models/cart_model.dart';
+import '../../data/models/order_model.dart';
 import '../../data/models/product_model.dart';
 import '../../data/repositories/ecommerce_repository.dart';
 
@@ -12,6 +14,8 @@ class EcommerceController extends GetxController {
   final isCategoriesLoading = false.obs;
   final wishlist = <ProductModel>[].obs;
   final reviews = <ReviewModel>[].obs;
+  final cart = CartModel(items: []).obs;
+  final orders = <OrderModel>[].obs;
 
   final selectedCategoryId = Rxn<int>();
   final searchQuery = ''.obs;
@@ -21,6 +25,7 @@ class EcommerceController extends GetxController {
     super.onInit();
     fetchCategories();
     fetchProducts();
+    fetchCart();
   }
 
   Future<void> fetchCategories() async {
@@ -223,6 +228,115 @@ class EcommerceController extends GetxController {
         date: '1 week ago',
       ),
     ];
+  }
+
+  // ── Cart ───────────────────────────────────────────────────────────────────
+  Future<void> fetchCart() async {
+    try {
+      final res = await _repo.getCart();
+      cart.value = res;
+    } catch (_) {
+      // Use empty cart if API fails
+    }
+  }
+
+  void addToCart(ProductModel product, {int quantity = 1}) {
+    final items = List<CartItemModel>.from(cart.value.items);
+    final index = items.indexWhere((item) => item.product.id == product.id);
+
+    if (index != -1) {
+      items[index].quantity += quantity;
+    } else {
+      items.add(CartItemModel(product: product, quantity: quantity));
+    }
+
+    cart.value = CartModel(items: items);
+    _updateCartOnServer();
+    Get.snackbar('Success', 'Added to cart');
+  }
+
+  void removeFromCart(int productId) {
+    final items = List<CartItemModel>.from(cart.value.items);
+    items.removeWhere((item) => item.product.id == productId);
+    cart.value = CartModel(items: items);
+    _updateCartOnServer();
+  }
+
+  void updateQuantity(int productId, int delta) {
+    final items = List<CartItemModel>.from(cart.value.items);
+    final index = items.indexWhere((item) => item.product.id == productId);
+
+    if (index != -1) {
+      final newQty = items[index].quantity + delta;
+      if (newQty > 0) {
+        items[index].quantity = newQty;
+        cart.value = CartModel(items: items);
+        _updateCartOnServer();
+      } else {
+        removeFromCart(productId);
+      }
+    }
+  }
+
+  Future<void> _updateCartOnServer() async {
+    try {
+      await _repo.updateCart(cart.value);
+    } catch (_) {
+      // Fail silently for demo
+    }
+  }
+
+  // ── Orders ─────────────────────────────────────────────────────────────────
+  Future<void> placeOrder(Map<String, dynamic> orderData) async {
+    isLoading.value = true;
+    try {
+      // ── Demo Logic ─────────────────────────────────────────────────────────
+      final newOrder = OrderModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        orderNumber: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
+        items: cart.value.items
+            .map(
+              (e) => OrderItemModel(
+                productId: e.product.id,
+                productName: e.product.name,
+                productImage: e.product.image,
+                price: e.product.currentPrice,
+                quantity: e.quantity,
+              ),
+            )
+            .toList(),
+        subtotal: cart.value.subtotal,
+        tax: cart.value.tax,
+        shipping: cart.value.shipping,
+        total: cart.value.total,
+        status: 'Pending',
+        createdAt: DateTime.now(),
+        paymentMethod: orderData['payment_method'],
+        shippingAddress: orderData['address'],
+      );
+
+      orders.insert(0, newOrder);
+      cart.value = CartModel(items: []);
+      _updateCartOnServer();
+
+      Get.offNamed('/order-success', arguments: newOrder);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to place order');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchOrderHistory() async {
+    isLoading.value = true;
+    try {
+      final res = await _repo.getOrderHistory();
+      if (res.isNotEmpty) orders.value = res;
+    } catch (_) {
+      // Keep demo orders
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
 

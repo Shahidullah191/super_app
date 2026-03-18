@@ -11,6 +11,11 @@ class FoodCheckoutScreen extends GetView<FoodController> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedPaymentMethod = 'cod'.obs;
+    final addressController = TextEditingController(
+      text: '123 Main St, Gulshan 2, Dhaka',
+    );
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('checkout'.tr)),
@@ -60,7 +65,7 @@ class FoodCheckoutScreen extends GetView<FoodController> {
                           ),
                         ),
                         Text(
-                          '123 Main St, Gulshan 2, Dhaka',
+                          addressController.text,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
@@ -69,7 +74,7 @@ class FoodCheckoutScreen extends GetView<FoodController> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => Get.toNamed(AppRoutes.addressBook),
                     child: Text(
                       'change'.tr,
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -81,12 +86,18 @@ class FoodCheckoutScreen extends GetView<FoodController> {
             const SizedBox(height: 32),
             _buildSectionTitle('payment_method'.tr),
             const SizedBox(height: 12),
-            _buildPaymentOption(Icons.money_rounded, 'Cash on Delivery', true),
+            _buildPaymentOption(
+              Icons.money_rounded,
+              'cod',
+              'cash_on_delivery'.tr,
+              selectedPaymentMethod,
+            ),
             const SizedBox(height: 12),
             _buildPaymentOption(
               Icons.account_balance_wallet_rounded,
-              'Wallet',
-              false,
+              'wallet',
+              'wallet_balance'.tr,
+              selectedPaymentMethod,
             ),
             const SizedBox(height: 32),
             _buildSectionTitle('order_summary'.tr),
@@ -118,12 +129,17 @@ class FoodCheckoutScreen extends GetView<FoodController> {
               ),
             ),
             const SizedBox(height: 40),
-            CustomButton(
-              label: 'place_order'.tr,
-              onPressed: () {
-                controller.clearCart();
-                Get.offNamed(AppRoutes.foodOrderConfirmation);
-              },
+            Obx(
+              () => CustomButton(
+                label: 'place_order'.tr,
+                isLoading: controller.isLoading.value,
+                onPressed: () {
+                  controller.placeOrder({
+                    'payment_method': selectedPaymentMethod.value,
+                    'address': addressController.text,
+                  });
+                },
+              ),
             ),
             const SizedBox(height: 20),
           ],
@@ -154,35 +170,49 @@ class FoodCheckoutScreen extends GetView<FoodController> {
     );
   }
 
-  Widget _buildPaymentOption(IconData icon, String label, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isSelected ? AppColors.primary : AppColors.border,
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? AppColors.primary : AppColors.textSecondary,
-          ),
-          const SizedBox(width: 16),
-          Text(
-            label,
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+  Widget _buildPaymentOption(
+    IconData icon,
+    String value,
+    String label,
+    RxString selected,
+  ) {
+    return Obx(() {
+      final isSelected = selected.value == value;
+      return GestureDetector(
+        onTap: () => selected.value = value,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.border,
+              width: 1.5,
             ),
           ),
-          const Spacer(),
-          if (isSelected)
-            const Icon(Icons.check_circle_rounded, color: AppColors.primary),
-        ],
-      ),
-    );
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
+              ),
+              const SizedBox(width: 16),
+              Text(
+                label,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              const Spacer(),
+              if (isSelected)
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.primary,
+                ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

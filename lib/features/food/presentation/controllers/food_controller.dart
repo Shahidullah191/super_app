@@ -1,17 +1,23 @@
 import 'package:get/get.dart';
 import '../../data/models/restaurant_model.dart';
+import '../../data/repositories/food_repository.dart';
 import '../../../../app/routes/app_routes.dart';
+import '../../../../core/network/api_client.dart';
 
 class FoodController extends GetxController {
+  final _repo = FoodRepository();
+
   final isLoading = false.obs;
   final restaurants = <RestaurantModel>[].obs;
   final selectedRestaurant = Rxn<RestaurantModel>();
   final cartItems = <MenuItemModel, int>{}.obs;
+  final foodOrders = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     fetchRestaurants();
+    fetchFoodOrderHistory();
   }
 
   Future<void> fetchRestaurants() async {
@@ -53,6 +59,11 @@ class FoodController extends GetxController {
           menu: _getDemoMenu(3),
         ),
       ];
+
+      final res = await _repo.getRestaurants();
+      if (res.isNotEmpty) restaurants.value = res;
+    } on AppException catch (_) {
+      // Silent fail - use demo data
     } finally {
       isLoading.value = false;
     }
@@ -142,13 +153,60 @@ class FoodController extends GetxController {
       selectedRestaurant.value = restaurants.firstWhereOrNull(
         (r) => r.id == id,
       );
+
+      final res = await _repo.getRestaurantMenu(id);
+      selectedRestaurant.value = res;
+    } on AppException catch (_) {
+      // Silent fail - use demo data
     } finally {
       isLoading.value = false;
     }
   }
 
-  void placeOrder() {
-    clearCart();
-    Get.offNamed(AppRoutes.foodOrderTracking.replaceAll(':id', '123'));
+  Future<void> fetchFoodOrderHistory() async {
+    try {
+      final res = await _repo.getFoodOrderHistory();
+      if (res.isNotEmpty) foodOrders.value = res;
+    } catch (_) {
+      // Silent fail
+    }
+  }
+
+  Future<void> placeOrder(Map<String, dynamic> orderData) async {
+    isLoading.value = true;
+    try {
+      // ── Demo Logic ─────────────────────────────────────────────────────────
+      final newOrder = {
+        'id': DateTime.now().millisecondsSinceEpoch,
+        'order_number': 'FOOD-${DateTime.now().millisecondsSinceEpoch}',
+        'restaurant_name': selectedRestaurant.value?.name ?? 'Restaurant',
+        'items': cartItems.entries
+            .map(
+              (e) => {
+                'name': e.key.name,
+                'quantity': e.value,
+                'price': e.key.price,
+              },
+            )
+            .toList(),
+        'subtotal': subtotal,
+        'delivery_fee': 40,
+        'total': subtotal + 40,
+        'status': 'Pending',
+        'date': DateTime.now().toIso8601String(),
+        'address': orderData['address'],
+        'payment_method': orderData['payment_method'],
+      };
+
+      foodOrders.insert(0, newOrder);
+      await _repo.placeFoodOrder(newOrder);
+
+      clearCart();
+      Get.offNamed(AppRoutes.foodOrderConfirmation);
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to place order');
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

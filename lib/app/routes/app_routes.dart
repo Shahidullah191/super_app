@@ -3,6 +3,7 @@ class AppRoutes {
 
   // ── Splash ───────────────────────────────────────────────────────────────────
   static const String splash = '/splash';
+  static const String onboarding = '/onboarding';
 
   // ── Auth ─────────────────────────────────────────────────────────────────────
   static const String login = '/login';
@@ -34,6 +35,7 @@ class AppRoutes {
   static const String groceryCheckout = '/grocery/checkout';
   static const String groceryProductDetails = '/grocery/product-details';
   static const String groceryOrderConfirmation = '/grocery/order-confirm';
+  static const String groceryOrders = '/grocery/orders';
 
   // ── Pharmacy ──────────────────────────────────────────────────────────────────
   static const String pharmacyMedicineList = '/pharmacy/medicines';
@@ -42,6 +44,7 @@ class AppRoutes {
   static const String pharmacyCart = '/pharmacy/cart';
   static const String pharmacyCheckout = '/pharmacy/checkout';
   static const String pharmacyOrderConfirmation = '/pharmacy/order-confirm';
+  static const String pharmacyOrders = '/pharmacy/orders';
 
   // ── Food ─────────────────────────────────────────────────────────────────────
   static const String foodRestaurantList = '/food/restaurants';
@@ -50,6 +53,7 @@ class AppRoutes {
   static const String foodCheckout = '/food/checkout';
   static const String foodOrderConfirmation = '/food/order-confirm';
   static const String foodOrderTracking = '/food/tracking/:id';
+  static const String foodOrders = '/food/orders';
 
   // ── Ride ─────────────────────────────────────────────────────────────────────
   static const String rideBooking = '/ride/booking';
@@ -57,16 +61,19 @@ class AppRoutes {
   static const String rideDriverArriving = '/ride/arriving';
   static const String rideTracking = '/ride/tracking/:id';
   static const String rideCompleted = '/ride/completed';
+  static const String rideHistory = '/ride/history';
 
   // ── Courier ───────────────────────────────────────────────────────────────────
   static const String courierBooking = '/courier/booking';
   static const String courierParcelDetail = '/courier/parcel/:id';
   static const String courierTracking = '/courier/tracking/:id';
+  static const String courierHistory = '/courier/history';
 
   // ── On-Demand Services ────────────────────────────────────────────────────────
   static const String serviceCategory = '/service/categories';
   static const String serviceProvider = '/service/providers';
   static const String serviceBooking = '/service/booking';
+  static const String serviceHistory = '/service/history';
 
   // ── Shared ────────────────────────────────────────────────────────────────────
   static const String profile = '/profile';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/service_controller.dart';
 
 class ServiceProviderScreen extends GetView<ServiceController> {
@@ -35,11 +36,10 @@ class ServiceProviderScreen extends GetView<ServiceController> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      provider.image,
+                    child: CustomNetworkImage(
+                      image: provider.image,
                       width: 80,
                       height: 80,
-                      fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(width: 16),

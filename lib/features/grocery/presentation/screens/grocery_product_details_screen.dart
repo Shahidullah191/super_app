@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_network_image.dart';
 import '../controllers/grocery_controller.dart';
 import '../../data/models/grocery_product_model.dart';
 
@@ -25,11 +26,10 @@ class GroceryProductDetailsScreen extends GetView<GroceryController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              product.image,
+            CustomNetworkImage(
+              image: product.image,
               width: double.infinity,
               height: 300,
-              fit: BoxFit.cover,
             ),
             Padding(
               padding: const EdgeInsets.all(20),

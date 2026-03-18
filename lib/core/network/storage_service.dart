@@ -32,4 +32,11 @@ class StorageService {
       _prefs.containsKey(AppConstants.tokenKey) &&
       _prefs.getString(AppConstants.tokenKey) != null &&
       _prefs.getString(AppConstants.tokenKey)!.isNotEmpty;
+
+  // ── Onboarding ─────────────────────────────────────────────────────────────
+  static bool get hasSeenOnboarding =>
+      _prefs.getBool(AppConstants.onboardingKey) ?? false;
+
+  static Future<void> setSeenOnboarding() =>
+      _prefs.setBool(AppConstants.onboardingKey, true);
 }

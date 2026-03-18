@@ -2,12 +2,17 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../data/models/ride_model.dart';
+import '../../data/repositories/ride_repository.dart';
+import '../../../../app/routes/app_routes.dart';
 
 enum RideStatus { idle, searching, arriving, ongoing, completed }
 
 class RideController extends GetxController {
+  final _repo = RideRepository();
+
   final status = RideStatus.idle.obs;
   final rideTypes = <RideTypeModel>[].obs;
+  final rideHistory = <Map<String, dynamic>>[].obs;
   final selectedRideType = Rxn<RideTypeModel>();
   final selectedDriver = Rxn<DriverModel>();
   final driverPosition = Rxn<LatLng>();
@@ -20,6 +25,7 @@ class RideController extends GetxController {
   void onInit() {
     super.onInit();
     _loadRideTypes();
+    fetchRideHistory();
   }
 
   void _loadRideTypes() {
@@ -50,6 +56,29 @@ class RideController extends GetxController {
       ),
     ];
     selectedRideType.value = rideTypes.first;
+
+    _fetchRideTypesFromApi();
+  }
+
+  Future<void> _fetchRideTypesFromApi() async {
+    try {
+      final res = await _repo.getRideTypes();
+      if (res.isNotEmpty) {
+        rideTypes.value = res;
+        selectedRideType.value = rideTypes.first;
+      }
+    } catch (_) {
+      // Silent fail - use demo data
+    }
+  }
+
+  Future<void> fetchRideHistory() async {
+    try {
+      final res = await _repo.getRideHistory();
+      if (res.isNotEmpty) rideHistory.value = res;
+    } catch (_) {
+      // Silent fail
+    }
   }
 
   void startSearching() async {
@@ -102,6 +131,31 @@ class RideController extends GetxController {
     status.value = RideStatus.idle;
     selectedDriver.value = null;
     driverPosition.value = null;
+  }
+
+  Future<void> completeRide() async {
+    _movementTimer?.cancel();
+    status.value = RideStatus.completed;
+
+    // ── Demo Logic ─────────────────────────────────────────────────────────
+    final newRide = {
+      'id': DateTime.now().millisecondsSinceEpoch,
+      'ride_number': 'RIDE-${DateTime.now().millisecondsSinceEpoch}',
+      'type': selectedRideType.value?.name,
+      'driver': selectedDriver.value?.name,
+      'fare': 450.0,
+      'status': 'Completed',
+      'date': DateTime.now().toIso8601String(),
+      'pickup': pickupAddress.value,
+      'destination': destinationAddress.value,
+    };
+
+    rideHistory.insert(0, newRide);
+    await _repo.bookRide(
+      newRide,
+    ); // Assuming booking is used for completion in demo
+
+    Get.offNamed(AppRoutes.rideCompleted);
   }
 
   @override
